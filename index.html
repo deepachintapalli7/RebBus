@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <title>RebBus - Bus Booking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🚌 RebBus</div>
+    <nav>
+        <span>Home</span>
+        <span>Bookings</span>
+        <span>About Us</span>
+        <span>Contact</span>
+    </nav>
+    <div>📞 24/7 Support &nbsp; 👤 My Account</div>
+</header>
+
+<section class="hero">
+
+    <div class="heroText">
+        <h1>Book Your Bus Ticket</h1>
+        <h2>Easy. Fast. Reliable.</h2>
+        <p>Search buses, choose your seat and book your journey in a few clicks.</p>
+
+        <div class="searchBox">
+
+            <div>
+                <label>From</label>
+                <input type="text" id="source" placeholder="Enter source">
+            </div>
+
+            <div>
+                <label>To</label>
+                <input type="text" id="destination" placeholder="Enter destination">
+            </div>
+
+            <div>
+                <label>Journey Date</label>
+                <input type="date" id="journeyDate">
+            </div>
+
+            <button onclick="searchBus()">🔍 Search Buses</button>
+
+        </div>
+    </div>
+
+    <div class="busAnimation">
+        🚌
+    </div>
+
+</section>
+
+<main>
+
+    <section class="card">
+
+        <h2>👤 Customer Details</h2>
+
+        <div class="formGrid">
+
+            <div>
+                <label>Full Name</label>
+                <input type="text" id="name" placeholder="Enter your full name">
+            </div>
+
+            <div>
+                <label>Age</label>
+                <input type="number" id="age" placeholder="Enter age">
+            </div>
+
+            <div>
+                <label>Gender</label>
+                <select id="gender">
+                    <option value="">Select Gender</option>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Seat Preference</label>
+                <select id="seatPreference">
+                    <option value="">Select Preference</option>
+                    <option value="Window">Window</option>
+                    <option value="Aisle">Aisle</option>
+                    <option value="Any">Any</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Phone Number</label>
+                <input type="text" id="phone" placeholder="10-digit mobile number">
+            </div>
+
+            <div>
+                <label>Email ID</label>
+                <input type="email" id="email" placeholder="Enter your email">
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="card">
+
+        <h2>💺 Select Your Seat</h2>
+
+        <div id="seatLayout">
+
+            <button class="seat" onclick="selectSeat(this)">1</button>
+            <button class="seat" onclick="selectSeat(this)">2</button>
+            <span class="aisle"></span>
+            <button class="seat" onclick="selectSeat(this)">3</button>
+            <button class="seat" onclick="selectSeat(this)">4</button>
+
+            <br>
+
+            <button class="seat" onclick="selectSeat(this)">5</button>
+            <button class="seat" onclick="selectSeat(this)">6</button>
+            <span class="aisle"></span>
+            <button class="seat" onclick="selectSeat(this)">7</button>
+            <button class="seat" onclick="selectSeat(this)">8</button>
+
+            <br>
+
+            <button class="seat" onclick="selectSeat(this)">9</button>
+            <button class="seat" onclick="selectSeat(this)">10</button>
+            <span class="aisle"></span>
+            <button class="seat" onclick="selectSeat(this)">11</button>
+            <button class="seat" onclick="selectSeat(this)">12</button>
+
+        </div>
+
+        <p class="selected">
+            Selected Seat:
+            <strong id="selectedSeat">None</strong>
+        </p>
+
+    </section>
+
+    <section class="bookingSection">
+
+        <button class="bookButton" onclick="bookTicket()">
+            🎫 Book Ticket
+        </button>
+
+        <h2 id="message"></h2>
+
+    </section>
+
+    <section class="card buses">
+
+        <h2>🚌 Available Buses</h2>
+
+        <div id="busList">
+            <p>Search for buses to see available options.</p>
+        </div>
+
+    </section>
+
+</main>
+
+<script src="script.js"></script>
+
+</body>
+</html>

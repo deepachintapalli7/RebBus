@@ -1,0 +1,199 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f6fa;
+    color: #222;
+}
+
+header {
+    height: 75px;
+    background: #d71920;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6%;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+nav span {
+    margin: 0 18px;
+    cursor: pointer;
+}
+
+.hero {
+    min-height: 430px;
+    background: linear-gradient(120deg, #ffd6d6, #fff);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 50px 7%;
+    overflow: hidden;
+}
+
+.heroText {
+    width: 58%;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin: 0;
+}
+
+.hero h2 {
+    font-size: 28px;
+    color: #d71920;
+}
+
+.hero p {
+    font-size: 18px;
+}
+
+.busAnimation {
+    font-size: 180px;
+    animation: moveBus 3s infinite alternate ease-in-out;
+}
+
+@keyframes moveBus {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(45px);
+    }
+}
+
+.searchBox {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    display: flex;
+    gap: 15px;
+    align-items: end;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.searchBox input {
+    width: 160px;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+}
+
+.searchBox button,
+.bookButton {
+    background: #d71920;
+    color: white;
+    padding: 14px 22px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+main {
+    width: 90%;
+    max-width: 1200px;
+    margin: 35px auto;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    margin-bottom: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+    color: #d71920;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+#seatLayout {
+    background: #f5f6fa;
+    padding: 30px;
+    text-align: center;
+    border-radius: 15px;
+}
+
+.seat {
+    width: 60px;
+    height: 50px;
+    margin: 7px;
+    background: #65b741;
+    color: white;
+    border-radius: 9px;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.seat:hover {
+    transform: scale(1.08);
+}
+
+.seat.selected {
+    background: #2878e8;
+}
+
+.aisle {
+    display: inline-block;
+    width: 35px;
+}
+
+.selected {
+    background: #e9f8e7;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 18px;
+}
+
+.bookingSection {
+    text-align: center;
+}
+
+.bookButton {
+    width: 50%;
+    font-size: 20px;
+}
+
+#message {
+    color: green;
+}
+
+.buses p {
+    padding: 15px;
+    background: #f8f8f8;
+    border-radius: 8px;
+}
