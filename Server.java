@@ -9,7 +9,8 @@ public class Server {
 
         try {
 
-            ServerSocket server = new ServerSocket(9092);
+        	int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "9092"));
+        	ServerSocket serverSocket = new ServerSocket(port);
 
             System.out.println("==============================");
             System.out.println("RebBus Server Started!");
@@ -18,7 +19,7 @@ public class Server {
 
             while (true) {
 
-                Socket socket = server.accept();
+                Socket socket = serverSocket.accept();
 
                 BufferedReader input = new BufferedReader(
                     new InputStreamReader(socket.getInputStream())
