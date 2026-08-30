@@ -129,7 +129,7 @@ public class Server {
                 }
 
                 // WEBSITE FILES
-                File file = new File("web" + path);
+                File file = new File("." + path);
 
                 if (file.exists() && !file.isDirectory()) {
 
