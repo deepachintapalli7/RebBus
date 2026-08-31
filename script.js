@@ -54,8 +54,7 @@ function bookTicket() {
         return;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-
+if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         alert("Invalid email!");
         return;
     }
@@ -66,7 +65,7 @@ function bookTicket() {
         return;
     }
 
-    fetch("http://localhost:9092/book", {
+    fetch("/book", {
 
         method: "POST",
 
