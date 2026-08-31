@@ -4,8 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN mkdir -p out && javac -d out $(find src -name "*.java")
+RUN mkdir -p out && javac -d out *.java
 
 CMD ["java", "-cp", "out", "busbooking.Server"]
-
-
