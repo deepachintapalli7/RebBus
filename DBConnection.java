@@ -10,11 +10,16 @@ public class DBConnection {
         Connection con = null;
 
         try {
-            con = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/busbooking",
-                "root",
-                "jimbff*703"
-            );
+            String host = System.getenv("DB_HOST");
+            String port = System.getenv().getOrDefault("DB_PORT", "3306");
+            String database = System.getenv("DB_NAME");
+            String user = System.getenv("DB_USER");
+            String password = System.getenv("DB_PASSWORD");
+
+            String url = "jdbc:mysql://" + host + ":" + port + "/" + database
+                       + "?sslMode=REQUIRED";
+
+            con = DriverManager.getConnection(url, user, password);
 
             System.out.println("Database connected successfully!");
 
