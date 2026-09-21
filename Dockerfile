@@ -1,10 +1,10 @@
-FROM eclipse-temurin:8-jdk
+
+FROM maven:3.9.9-eclipse-temurin-8
 
 WORKDIR /app
 
 COPY . /app/
 
-RUN mkdir -p out
-RUN javac -d out *.java
+RUN mvn clean package -DskipTests
 
-CMD ["java", "-cp", "out", "busbooking.Server"]
+CMD ["java", "-jar", "target/RebBus-1.0.jar"]
