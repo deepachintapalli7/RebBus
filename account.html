@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BookMyRoute - My Account</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+        }
+
+        .sidebar {
+            position: fixed;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg,#071952,#088395);
+            padding: 25px 15px;
+            color: white;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+
+        .menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            margin: 7px 0;
+            border-radius: 12px;
+        }
+
+        .menu a:hover,
+        .menu .active {
+            background: rgba(255,255,255,.2);
+        }
+
+        .main {
+            margin-left: 250px;
+            padding: 35px;
+        }
+
+        h1 {
+            color: #071952;
+            margin-bottom: 25px;
+        }
+
+        .account-card {
+            max-width: 850px;
+            background: white;
+            padding: 35px;
+            border-radius: 22px;
+            box-shadow: 0 7px 25px rgba(0,0,0,.08);
+        }
+
+        .profile-top {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#071952,#088395);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 45px;
+        }
+
+        .profile-top h2 {
+            color: #071952;
+            margin-bottom: 7px;
+        }
+
+        .profile-top p {
+            color: #777;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .detail {
+            padding: 18px;
+            background: #f7fafc;
+            border-radius: 12px;
+        }
+
+        .detail span {
+            display: block;
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .detail strong {
+            color: #071952;
+            font-size: 16px;
+        }
+
+        .edit-btn {
+            margin-top: 30px;
+            padding: 13px 25px;
+            border: none;
+            border-radius: 10px;
+            background: #088395;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .edit-btn:hover {
+            background: #071952;
+        }
+
+        @media(max-width:800px) {
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                margin-left: 190px;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">
+        🚌 BookMyRoute
+    </div>
+
+    <div class="menu">
+
+        <a href="dashboard.html">
+            🏠 Dashboard
+        </a>
+
+        <a href="booking.html">
+            🎫 Book a Bus
+        </a>
+
+        <a href="bookings.html">
+            📋 My Bookings
+        </a>
+
+        <a href="account.html" class="active">
+            👤 My Account
+        </a>
+
+        <a href="support.html">
+            📞 24/7 Support
+        </a>
+
+        <a href="about.html">
+            ℹ️ About Us
+        </a>
+
+        <a href="login.html">
+            🚪 Logout
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="main">
+
+    <h1>👤 My Account</h1>
+
+    <div class="account-card">
+
+        <div class="profile-top">
+
+            <div class="avatar">
+                👤
+            </div>
+
+            <div>
+                <h2>Traveler</h2>
+                <p>BookMyRoute Member</p>
+            </div>
+
+        </div>
+
+
+        <div class="details">
+
+            <div class="detail">
+                <span>Username</span>
+                <strong id="username">
+                    Traveler
+                </strong>
+            </div>
+
+            <div class="detail">
+                <span>Email</span>
+                <strong>
+                    Not added
+                </strong>
+            </div>
+
+            <div class="detail">
+                <span>Phone</span>
+                <strong>
+                    Not added
+                </strong>
+            </div>
+
+            <div class="detail">
+                <span>Member Since</span>
+                <strong>
+                    2026
+                </strong>
+            </div>
+
+        </div>
+
+        <button class="edit-btn" onclick="editProfile()">
+            ✏️ Edit Profile
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function editProfile() {
+
+    alert(
+        "Profile editing will be connected to the user database later."
+    );
+
+}
+
+</script>
+
+</body>
+</html>
