@@ -302,7 +302,11 @@ function sendOTP() {
 
     .then(response => response.text())
 
-    .then(data => {
+.then(data => {
+
+    console.log("Server response:", data);
+
+    if (data === "OTP_SENT") {
 
         message.innerText =
             "📩 OTP sent to your Gmail.";
@@ -318,8 +322,29 @@ function sendOTP() {
         document.getElementById("backButton")
             .style.display = "block";
 
-    })
+    } else if (data === "EMAIL_FAILED") {
 
+        message.innerText =
+            "❌ Email could not be sent. Check Gmail settings.";
+
+        message.style.color = "red";
+
+    } else if (data === "INVALID_EMAIL") {
+
+        message.innerText =
+            "❌ Please use a Gmail address.";
+
+        message.style.color = "red";
+
+    } else {
+
+        message.innerText =
+            "❌ Server error: " + data;
+
+        message.style.color = "red";
+    }
+
+})
     .catch(error => {
 
         console.error(error);
