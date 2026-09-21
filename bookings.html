@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BookMyRoute - My Bookings</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+        }
+
+        .sidebar {
+            position: fixed;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg,#071952,#088395);
+            padding: 25px 15px;
+            color: white;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+
+        .menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            margin: 7px 0;
+            border-radius: 12px;
+        }
+
+        .menu a:hover,
+        .menu .active {
+            background: rgba(255,255,255,.2);
+        }
+
+        .main {
+            margin-left: 250px;
+            padding: 35px;
+        }
+
+        h1 {
+            color: #071952;
+            margin-bottom: 25px;
+        }
+
+        .booking-card {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 7px 20px rgba(0,0,0,.07);
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .booking-header h2 {
+            color: #071952;
+        }
+
+        .status {
+            background: #d9f8e8;
+            color: #087443;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 18px;
+        }
+
+        .detail {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .detail span {
+            display: block;
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .detail strong {
+            color: #071952;
+        }
+
+        .empty {
+            background: white;
+            padding: 60px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 7px 20px rgba(0,0,0,.07);
+        }
+
+        .empty-icon {
+            font-size: 65px;
+            margin-bottom: 15px;
+        }
+
+        .empty h2 {
+            color: #071952;
+            margin-bottom: 10px;
+        }
+
+        .empty p {
+            color: #777;
+        }
+
+        .book-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 22px;
+            background: #088395;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        @media(max-width:800px) {
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                margin-left: 190px;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">
+        🚌 BookMyRoute
+    </div>
+
+    <div class="menu">
+
+        <a href="dashboard.html">
+            🏠 Dashboard
+        </a>
+
+        <a href="booking.html">
+            🎫 Book a Bus
+        </a>
+
+        <a href="bookings.html" class="active">
+            📋 My Bookings
+        </a>
+
+        <a href="account.html">
+            👤 My Account
+        </a>
+
+        <a href="support.html">
+            📞 24/7 Support
+        </a>
+
+        <a href="about.html">
+            ℹ️ About Us
+        </a>
+
+        <a href="login.html">
+            🚪 Logout
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="main">
+
+    <h1>📋 My Bookings</h1>
+
+    <div id="bookingList">
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                🎫
+            </div>
+
+            <h2>No bookings yet</h2>
+
+            <p>
+                Your confirmed bus bookings will appear here.
+            </p>
+
+            <a href="booking.html" class="book-btn">
+                Book Your First Bus 🚌
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</body>
+</html>
