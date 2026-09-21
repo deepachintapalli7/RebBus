@@ -348,7 +348,7 @@ public class Server {
 
                         contentType =
                                 "application/javascript";
-                                            }
+                    }
 
                     String responseHeader =
                             "HTTP/1.1 200 OK\r\n" +
@@ -540,11 +540,14 @@ public class Server {
             Session session =
                     Session.getInstance(
                             props,
-new javax.mail.Authenticator() {
-javax.mail.PasswordAuthentication                                getPasswordAuthentication() {
+                            new javax.mail.Authenticator() {
 
-                                    return new PasswordAuthentication(
-javax.mail.PasswordAuthentication                                            password
+                                protected javax.mail.PasswordAuthentication
+                                getPasswordAuthentication() {
+
+                                    return new javax.mail.PasswordAuthentication(
+                                            username,
+                                            password
                                     );
                                 }
                             }
