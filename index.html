@@ -1,60 +1,558 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-    <title>RebBus - Bus Booking</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RebBus - Smart Bus Booking</title>
+
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #222;
+        }
+
+        /* ================= HEADER ================= */
+
+        header {
+            background: linear-gradient(135deg, #e50914, #b00020);
+            color: white;
+            padding: 16px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        nav a,
+        .accountLinks a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        nav a:hover,
+        .accountLinks a:hover {
+            opacity: 0.75;
+        }
+
+        .accountLinks {
+            white-space: nowrap;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 520px;
+            padding: 70px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #fff1f2, #ffe4e6);
+        }
+
+        .heroText {
+            max-width: 850px;
+        }
+
+        .heroText h1 {
+            font-size: 52px;
+            margin-bottom: 10px;
+            color: #c70016;
+        }
+
+        .heroText h2 {
+            font-size: 28px;
+            margin-top: 0;
+        }
+
+        .heroText p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .busAnimation {
+            font-size: 130px;
+            animation: moveBus 3s infinite alternate ease-in-out;
+        }
+
+        @keyframes moveBus {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(40px);
+            }
+        }
+
+        /* ================= SEARCH ================= */
+
+        .searchBox {
+            margin-top: 35px;
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+
+        .searchBox div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input,
+        select {
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            min-width: 180px;
+        }
+
+        button {
+            border: none;
+            border-radius: 9px;
+            padding: 13px 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .searchButton {
+            background: #e50914;
+            color: white;
+            align-self: end;
+        }
+
+        .searchButton:hover,
+        .bookButton:hover {
+            background: #b00020;
+        }
+
+        /* ================= MAIN ================= */
+
+        main {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        .card {
+            background: white;
+            margin-bottom: 30px;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            color: #c70016;
+        }
+
+        .formGrid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        /* ================= SEATS ================= */
+
+        #seatLayout {
+            text-align: center;
+            padding: 25px;
+        }
+
+        .seat {
+            background: #e8f0ff;
+            color: #333;
+            margin: 6px;
+            width: 55px;
+            height: 45px;
+            border-radius: 8px;
+        }
+
+        .seat:hover {
+            background: #c70016;
+            color: white;
+        }
+
+        .aisle {
+            display: inline-block;
+            width: 25px;
+        }
+
+        .selected {
+            font-size: 18px;
+        }
+
+        /* ================= BOOK BUTTON ================= */
+
+        .bookingSection {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .bookButton {
+            background: #e50914;
+            color: white;
+            font-size: 18px;
+            padding: 16px 35px;
+        }
+
+        #message {
+            margin-top: 20px;
+        }
+
+        /* ================= BUS CARDS ================= */
+
+        #busList {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .bus-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.07);
+        }
+
+        .bus-card h3 {
+            color: #c70016;
+        }
+
+        /* ================= DASHBOARD ================= */
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+        }
+
+        .dashboard-card span {
+            font-size: 35px;
+        }
+
+        .dashboard-card h3 {
+            margin-bottom: 5px;
+            color: #c70016;
+        }
+
+        /* ================= BOOKINGS ================= */
+
+        .booking-history {
+            overflow-x: auto;
+        }
+
+        .booking-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .booking-table th,
+        .booking-table td {
+            border-bottom: 1px solid #eee;
+            padding: 14px;
+            text-align: left;
+        }
+
+        .booking-table th {
+            background: #fff1f2;
+            color: #b00020;
+        }
+
+        .empty-message {
+            color: #777;
+            padding: 20px 0;
+        }
+
+        /* ================= ACCOUNT ================= */
+
+        .account-box {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .profile-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #ffe4e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 55px;
+        }
+
+        .account-info p {
+            margin: 10px 0;
+        }
+
+        .logoutButton {
+            background: #333;
+            color: white;
+        }
+
+        /* ================= LOGIN ================= */
+
+        .login-box {
+            max-width: 500px;
+            margin: auto;
+            background: #fff;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .login-box input {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .loginButton {
+            width: 100%;
+            background: #e50914;
+            color: white;
+        }
+
+        /* ================= SUPPORT ================= */
+
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .support-card {
+            padding: 25px;
+            border-radius: 15px;
+            background: #fff5f5;
+            text-align: center;
+        }
+
+        .support-card .icon {
+            font-size: 40px;
+        }
+
+        .emergency {
+            color: #d00000;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        /* ================= ABOUT ================= */
+
+        .about-highlight {
+            background: linear-gradient(135deg, #c70016, #ff3344);
+            color: white;
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature {
+            background: #f8f9ff;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .feature span {
+            font-size: 40px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #171717;
+            color: white;
+            padding: 35px 7%;
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 850px) {
+
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .heroText h1 {
+                font-size: 38px;
+            }
+
+            .formGrid,
+            .support-grid,
+            .feature-grid,
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .account-box {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .profile-icon {
+                margin: auto;
+            }
+        }
+    </style>
 </head>
+
 
 <body>
 
+<!-- ================= HEADER ================= -->
+
 <header>
-    <div class="logo">🚌 RebBus</div>
+
+    <div class="logo">
+        🚌 RebBus
+    </div>
+
     <nav>
-        <span>Home</span>
-        <span>Bookings</span>
-        <span>About Us</span>
-        <span>Contact</span>
+        <a href="#home">Home</a>
+        <a href="#bookings">Bookings</a>
+        <a href="#about">About Us</a>
+        <a href="#support">Contact</a>
     </nav>
-    <div>📞 24/7 Support &nbsp; 👤 My Account</div>
+
+    <div class="accountLinks">
+        📞 <a href="#support">24/7 Support</a>
+        &nbsp;&nbsp;
+        👤 <a href="#account">My Account</a>
+    </div>
+
 </header>
 
-<section class="hero">
+
+<!-- ================= HOME ================= -->
+
+<section class="hero" id="home">
 
     <div class="heroText">
+
         <h1>Book Your Bus Ticket</h1>
-        <h2>Easy. Fast. Reliable.</h2>
-        <p>Search buses, choose your seat and book your journey in a few clicks.</p>
+
+        <h2>Easy. Fast. Reliable. 🚌</h2>
+
+        <p>
+            Search buses, choose your seat and book your journey
+            in just a few clicks.
+        </p>
+
 
         <div class="searchBox">
 
             <div>
                 <label>From</label>
-                <input type="text" id="source" placeholder="Enter source">
+                <input
+                    type="text"
+                    id="source"
+                    placeholder="Enter source">
             </div>
+
 
             <div>
                 <label>To</label>
-                <input type="text" id="destination" placeholder="Enter destination">
+                <input
+                    type="text"
+                    id="destination"
+                    placeholder="Enter destination">
             </div>
+
 
             <div>
-                <label>Journey Date</label>
-                <input type="date" id="journeyDate" min="">
-				<script>
-const today = new Date();
-const yyyy = today.getFullYear();
-const mm = String(today.getMonth() + 1).padStart(2, '0');
-const dd = String(today.getDate()).padStart(2, '0');
 
-document.getElementById("journeyDate").min = `${yyyy}-${mm}-${dd}`;
-</script>
+                <label>Journey Date</label>
+
+                <input
+                    type="date"
+                    id="journeyDate"
+                    min="">
+
             </div>
 
-            <button onclick="searchBus()">🔍 Search Buses</button>
+
+            <button
+                class="searchButton"
+                onclick="searchBus()">
+
+                🔍 Search Buses
+
+            </button>
 
         </div>
+
     </div>
+
 
     <div class="busAnimation">
         🚌
@@ -62,129 +560,604 @@ document.getElementById("journeyDate").min = `${yyyy}-${mm}-${dd}`;
 
 </section>
 
+
 <main>
 
-    <section class="card">
 
-        <h2>👤 Customer Details</h2>
+<!-- ================= DASHBOARD ================= -->
 
-        <div class="formGrid">
+<section class="card">
 
-            <div>
-                <label>Full Name</label>
-                <input type="text" id="name" placeholder="Enter your full name">
-            </div>
+    <h2>📊 RebBus Dashboard</h2>
 
-            <div>
-                <label>Age</label>
-                <input type="number" id="age" placeholder="Enter age">
-            </div>
+    <div class="dashboard">
 
-            <div>
-                <label>Gender</label>
-                <select id="gender">
-                    <option value="">Select Gender</option>
-                    <option value="Female">Female</option>
-                    <option value="Male">Male</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
+        <div class="dashboard-card">
+            <span>🚌</span>
+            <h3>Easy Booking</h3>
+            <p>Book your journey quickly.</p>
+        </div>
 
-            <div>
-                <label>Seat Preference</label>
-                <select id="seatPreference">
-                    <option value="">Select Preference</option>
-                    <option value="Window">Window</option>
-                    <option value="Aisle">Aisle</option>
-                    <option value="Any">Any</option>
-                </select>
-            </div>
+        <div class="dashboard-card">
+            <span>💺</span>
+            <h3>Seat Selection</h3>
+            <p>Choose your preferred seat.</p>
+        </div>
 
-            <div>
-                <label>Phone Number</label>
-                <input type="text" id="phone" placeholder="10-digit mobile number">
-            </div>
+        <div class="dashboard-card">
+            <span>🔒</span>
+            <h3>Secure</h3>
+            <p>Your booking information is protected.</p>
+        </div>
 
-            <div>
-                <label>Email ID</label>
-                <input type="email" id="email" placeholder="Enter your email">
-            </div>
+        <div class="dashboard-card">
+            <span>📞</span>
+            <h3>24/7 Support</h3>
+            <p>Help whenever you need it.</p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CUSTOMER DETAILS ================= -->
+
+<section class="card" id="bookingForm">
+
+    <h2>👤 Passenger Details</h2>
+
+    <div class="formGrid">
+
+        <div>
+            <label>Full Name</label>
+
+            <input
+                type="text"
+                id="name"
+                placeholder="Enter your full name">
+        </div>
+
+
+        <div>
+            <label>Age</label>
+
+            <input
+                type="number"
+                id="age"
+                placeholder="Enter age">
+        </div>
+
+
+        <div>
+            <label>Gender</label>
+
+            <select id="gender">
+
+                <option value="">
+                    Select Gender
+                </option>
+
+                <option value="Female">
+                    Female
+                </option>
+
+                <option value="Male">
+                    Male
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
 
         </div>
 
-    </section>
 
-    <section class="card">
+        <div>
 
-        <h2>💺 Select Your Seat</h2>
+            <label>Seat Preference</label>
 
-        <div id="seatLayout">
+            <select id="seatPreference">
 
-            <button class="seat" onclick="selectSeat(this)">1</button>
-            <button class="seat" onclick="selectSeat(this)">2</button>
-            <span class="aisle"></span>
-            <button class="seat" onclick="selectSeat(this)">3</button>
-            <button class="seat" onclick="selectSeat(this)">4</button>
+                <option value="">
+                    Select Preference
+                </option>
 
-            <br>
+                <option value="Window">
+                    Window
+                </option>
 
-            <button class="seat" onclick="selectSeat(this)">5</button>
-            <button class="seat" onclick="selectSeat(this)">6</button>
-            <span class="aisle"></span>
-            <button class="seat" onclick="selectSeat(this)">7</button>
-            <button class="seat" onclick="selectSeat(this)">8</button>
+                <option value="Aisle">
+                    Aisle
+                </option>
 
-            <br>
+                <option value="Any">
+                    Any
+                </option>
 
-            <button class="seat" onclick="selectSeat(this)">9</button>
-            <button class="seat" onclick="selectSeat(this)">10</button>
-            <span class="aisle"></span>
-            <button class="seat" onclick="selectSeat(this)">11</button>
-            <button class="seat" onclick="selectSeat(this)">12</button>
+            </select>
 
         </div>
 
-        <p class="selected">
-            Selected Seat:
-            <strong id="selectedSeat">None</strong>
+
+        <div>
+
+            <label>Phone Number</label>
+
+            <input
+                type="text"
+                id="phone"
+                placeholder="10-digit mobile number">
+
+        </div>
+
+
+        <div>
+
+            <label>Email ID</label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter your email">
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= SEAT SELECTION ================= -->
+
+<section class="card">
+
+    <h2>💺 Select Your Seat</h2>
+
+    <div id="seatLayout">
+
+        <button class="seat" onclick="selectSeat(this)">1</button>
+        <button class="seat" onclick="selectSeat(this)">2</button>
+
+        <span class="aisle"></span>
+
+        <button class="seat" onclick="selectSeat(this)">3</button>
+        <button class="seat" onclick="selectSeat(this)">4</button>
+
+        <br>
+
+        <button class="seat" onclick="selectSeat(this)">5</button>
+        <button class="seat" onclick="selectSeat(this)">6</button>
+
+        <span class="aisle"></span>
+
+        <button class="seat" onclick="selectSeat(this)">7</button>
+        <button class="seat" onclick="selectSeat(this)">8</button>
+
+        <br>
+
+        <button class="seat" onclick="selectSeat(this)">9</button>
+        <button class="seat" onclick="selectSeat(this)">10</button>
+
+        <span class="aisle"></span>
+
+        <button class="seat" onclick="selectSeat(this)">11</button>
+        <button class="seat" onclick="selectSeat(this)">12</button>
+
+    </div>
+
+
+    <p class="selected">
+
+        Selected Seat:
+
+        <strong id="selectedSeat">
+            None
+        </strong>
+
+    </p>
+
+</section>
+
+
+<!-- ================= BOOK BUTTON ================= -->
+
+<section class="bookingSection">
+
+    <button
+        class="bookButton"
+        onclick="bookTicket()">
+
+        🎫 Book Ticket
+
+    </button>
+
+    <h2 id="message"></h2>
+
+</section>
+
+
+<!-- ================= AVAILABLE BUSES ================= -->
+
+<section class="card buses">
+
+    <h2>🚌 Available Buses</h2>
+
+    <div id="busList">
+
+        <p>
+            Search for buses to see available options.
         </p>
 
-    </section>
+    </div>
 
-    <section class="bookingSection">
+</section>
 
-        <button class="bookButton" onclick="bookTicket()">
-            🎫 Book Ticket
-        </button>
 
-        <h2 id="message"></h2>
-<nav>
-    <a href="index.html">Home</a>
-    <a href="bookings.html">Bookings</a>
-    <a href="about.html">About Us</a>
-    <a href="support.html">Contact</a>
-</nav>
+<!-- ================= MY BOOKINGS ================= -->
 
-<div class="accountLinks">
-    📞 <a href="support.html">24/7 Support</a>
-    &nbsp;&nbsp;
-    👤 <a href="login.html">My Account</a>
-</div>
-    </section>
+<section class="card" id="bookings">
 
-    <section class="card buses">
+    <h2>🎫 My Bookings</h2>
 
-        <h2>🚌 Available Buses</h2>
+    <p>
+        Your confirmed journeys will appear here.
+    </p>
 
-        <div id="busList">
-            <p>Search for buses to see available options.</p>
+    <div class="booking-history">
+
+        <table class="booking-table">
+
+            <thead>
+
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Bus</th>
+                    <th>Route</th>
+                    <th>Date</th>
+                    <th>Seat</th>
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody id="bookingHistory">
+
+                <tr>
+                    <td colspan="6" class="empty-message">
+                        No bookings displayed yet.
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- ================= MY ACCOUNT ================= -->
+
+<section class="card" id="account">
+
+    <h2>👤 My Account</h2>
+
+    <div class="account-box">
+
+        <div class="profile-icon">
+            👤
         </div>
 
-    </section>
+
+        <div class="account-info">
+
+            <p>
+                <strong>Name:</strong>
+                <span id="accountName">
+                    Guest User
+                </span>
+            </p>
+
+            <p>
+                <strong>Email:</strong>
+                <span id="accountEmail">
+                    Not logged in
+                </span>
+            </p>
+
+            <p>
+                <strong>Phone:</strong>
+                <span id="accountPhone">
+                    Not available
+                </span>
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                <span>
+                    Guest
+                </span>
+            </p>
+
+            <button
+                class="logoutButton"
+                onclick="alert('Login system will be connected next.')">
+
+                🚪 Logout
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= LOGIN ================= -->
+
+<section class="card">
+
+    <h2>🔐 Login / Register</h2>
+
+    <div class="login-box">
+
+        <input
+            type="email"
+            id="loginEmail"
+            placeholder="Email address">
+
+        <input
+            type="password"
+            id="loginPassword"
+            placeholder="Password">
+
+        <button
+            class="loginButton"
+            onclick="alert('Secure login will be connected to the database next.')">
+
+            🔐 Login
+
+        </button>
+
+        <p style="text-align:center;">
+            New to RebBus?
+            <strong>Create an account</strong>
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ================= SUPPORT ================= -->
+
+<section class="card" id="support">
+
+    <h2>📞 24/7 Support & Emergency Help</h2>
+
+    <div class="support-grid">
+
+        <div class="support-card">
+
+            <div class="icon">🚑</div>
+
+            <h3>Emergency</h3>
+
+            <p class="emergency">
+                112
+            </p>
+
+            <p>
+                National emergency number
+            </p>
+
+        </div>
+
+
+        <div class="support-card">
+
+            <div class="icon">🚓</div>
+
+            <h3>Police</h3>
+
+            <p class="emergency">
+                100
+            </p>
+
+            <p>
+                Police emergency assistance
+            </p>
+
+        </div>
+
+
+        <div class="support-card">
+
+            <div class="icon">🚒</div>
+
+            <h3>Fire</h3>
+
+            <p class="emergency">
+                101
+            </p>
+
+            <p>
+                Fire emergency assistance
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="support-grid">
+
+        <div class="support-card">
+
+            <div class="icon">🚌</div>
+
+            <h3>Booking Help</h3>
+
+            <p>
+                Need help with your bus booking?
+            </p>
+
+        </div>
+
+
+        <div class="support-card">
+
+            <div class="icon">💺</div>
+
+            <h3>Seat Problems</h3>
+
+            <p>
+                Contact support for seat-related issues.
+            </p>
+
+        </div>
+
+
+        <div class="support-card">
+
+            <div class="icon">📧</div>
+
+            <h3>Email Support</h3>
+
+            <p>
+                support@rebbus.com
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ABOUT ================= -->
+
+<section class="card" id="about">
+
+    <div class="about-highlight">
+
+        <h2>🚌 About RebBus</h2>
+
+        <p>
+            RebBus is a smart bus booking platform designed
+            to make travelling simple, fast and convenient.
+        </p>
+
+        <p>
+            Our goal is to bring bus search, seat selection,
+            passenger details and booking into one easy platform.
+        </p>
+
+    </div>
+
+
+    <h2>✨ Our Theme</h2>
+
+    <div class="feature-grid">
+
+        <div class="feature">
+
+            <span>⚡</span>
+
+            <h3>Fast</h3>
+
+            <p>
+                Quick bus searching and simple booking.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <span>🔒</span>
+
+            <h3>Reliable</h3>
+
+            <p>
+                Designed with secure database-backed bookings.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <span>❤️</span>
+
+            <h3>User Friendly</h3>
+
+            <p>
+                A simple interface designed for everyday travellers.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
 
 </main>
 
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <h2>🚌 RebBus</h2>
+
+    <p>
+        Easy. Fast. Reliable.
+    </p>
+
+    <p>
+        © 2026 RebBus. All Rights Reserved.
+    </p>
+
+</footer>
+
+
+<!-- ================= DATE VALIDATION ================= -->
+
+<script>
+
+    const today = new Date();
+
+    const yyyy = today.getFullYear();
+
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+
+    const dd = String(today.getDate()).padStart(2, '0');
+
+    const journeyDate =
+        document.getElementById("journeyDate");
+
+    journeyDate.min =
+        `${yyyy}-${mm}-${dd}`;
+
+</script>
+
+
+<!-- KEEP YOUR EXISTING JAVASCRIPT -->
+
 <script src="script.js"></script>
 
+
 </body>
+
 </html>
