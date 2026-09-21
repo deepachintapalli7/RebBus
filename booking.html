@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>BookMyRoute - Book a Bus</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+
+<aside class="sidebar">
+
+    <div class="logo">
+        🚌 BookMyRoute
+        <small>Travel smarter. Travel better.</small>
+    </div>
+
+    <div class="menu-title">MAIN MENU</div>
+
+    <a href="index.html">
+        🏠 Dashboard
+    </a>
+
+    <a href="booking.html" class="active">
+        🎫 Book a Bus
+    </a>
+
+    <a href="bookings.html">
+        📋 My Bookings
+    </a>
+
+    <div class="menu-title">ACCOUNT</div>
+
+    <a href="account.html">
+        👤 My Account
+    </a>
+
+    <a href="login.html">
+        🔐 Login
+    </a>
+
+    <div class="menu-title">HELP</div>
+
+    <a href="support.html">
+        📞 24/7 Support
+    </a>
+
+    <a href="about.html">
+        ℹ️ About Us
+    </a>
+
+</aside>
+
+
+<div class="main">
+
+    <div class="topbar">
+
+        <div class="topbar-title">
+            🎫 Book Your Journey
+        </div>
+
+        <div>
+            🚌 BookMyRoute
+        </div>
+
+    </div>
+
+
+    <div class="content">
+
+        <h1 class="page-title">
+            Book a Bus
+        </h1>
+
+        <p class="page-subtitle">
+            Enter your journey details and select your seat.
+        </p>
+
+
+        <!-- SEARCH -->
+
+        <div class="form-card">
+
+            <h2>🔎 Journey Details</h2>
+
+            <br>
+
+            <div class="form-grid">
+
+                <div>
+
+                    <label>From</label>
+
+                    <input
+                        type="text"
+                        id="source"
+                        placeholder="Enter source">
+
+                </div>
+
+
+                <div>
+
+                    <label>To</label>
+
+                    <input
+                        type="text"
+                        id="destination"
+                        placeholder="Enter destination">
+
+                </div>
+
+
+                <div>
+
+                    <label>Journey Date</label>
+
+                    <input
+                        type="date"
+                        id="journeyDate">
+
+                </div>
+
+            </div>
+
+            <br>
+
+            <button
+                class="primary"
+                onclick="searchBus()">
+
+                🔍 Search Buses
+
+            </button>
+
+        </div>
+
+
+        <!-- BUS LIST -->
+
+        <div class="form-card">
+
+            <h2>🚌 Available Buses</h2>
+
+            <br>
+
+            <div id="busList">
+
+                <p>
+                    Search for buses to see available options.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- PASSENGER -->
+
+        <div class="form-card">
+
+            <h2>👤 Passenger Details</h2>
+
+            <br>
+
+            <div class="form-grid">
+
+                <div>
+
+                    <label>Full Name</label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Enter your full name">
+
+                </div>
+
+
+                <div>
+
+                    <label>Age</label>
+
+                    <input
+                        type="number"
+                        id="age"
+                        placeholder="Enter age">
+
+                </div>
+
+
+                <div>
+
+                    <label>Gender</label>
+
+                    <select id="gender">
+
+                        <option value="">
+                            Select Gender
+                        </option>
+
+                        <option value="Female">
+                            Female
+                        </option>
+
+                        <option value="Male">
+                            Male
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label>Seat Preference</label>
+
+                    <select id="seatPreference">
+
+                        <option value="">
+                            Select Preference
+                        </option>
+
+                        <option value="Window">
+                            Window
+                        </option>
+
+                        <option value="Aisle">
+                            Aisle
+                        </option>
+
+                        <option value="Any">
+                            Any
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label>Phone</label>
+
+                    <input
+                        type="text"
+                        id="phone"
+                        placeholder="10-digit mobile number">
+
+                </div>
+
+
+                <div>
+
+                    <label>Email</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter email">
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SEATS -->
+
+        <div class="form-card seats">
+
+            <h2>💺 Select Your Seat</h2>
+
+            <br>
+
+            <div id="seatLayout">
+
+                <button class="seat"
+                        onclick="selectSeat(this)">1</button>
+
+                <button class="seat"
+                        onclick="selectSeat(this)">2</button>
+
+                <span class="aisle"></span>
+
+                <button class="seat"
+                        onclick="selectSeat(this)">3</button>
+
+                <button class="seat"
+                        onclick="selectSeat(this)">4</button>
+
+                <br>
+
+                <button class="seat"
+                        onclick="selectSeat(this)">5</button>
+
+                <button class="seat"
+                        onclick="selectSeat(this)">6</button>
+
+                <span class="aisle"></span>
+
+                <button class="seat"
+                        onclick="selectSeat(this)">7</button>
+
+                <button class="seat"
+                        onclick="selectSeat(this)">8</button>
+
+                <br>
+
+                <button class="seat"
+                        onclick="selectSeat(this)">9</button>
+
+                <button class="seat"
+                        onclick="selectSeat(this)">10</button>
+
+                <span class="aisle"></span>
+
+                <button class="seat"
+                        onclick="selectSeat(this)">11</button>
+
+                <button class="seat"
+                        onclick="selectSeat(this)">12</button>
+
+            </div>
+
+            <br>
+
+            <p>
+                Selected Seat:
+                <strong id="selectedSeat">None</strong>
+            </p>
+
+        </div>
+
+
+        <!-- BOOK -->
+
+        <div style="text-align:center">
+
+            <button
+                class="primary"
+                onclick="bookTicket()">
+
+                🎫 Confirm Booking
+
+            </button>
+
+            <h2 id="message"></h2>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+const today = new Date();
+
+const yyyy = today.getFullYear();
+
+const mm =
+    String(today.getMonth() + 1).padStart(2, '0');
+
+const dd =
+    String(today.getDate()).padStart(2, '0');
+
+document.getElementById("journeyDate").min =
+    `${yyyy}-${mm}-${dd}`;
+
+</script>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
