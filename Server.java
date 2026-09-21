@@ -335,20 +335,20 @@ public class Server {
 
                     byte[] data =
                             readFile(file);
+String contentType =
+        "text/html; charset=UTF-8";
 
-                    String contentType =
-                            "text/html";
+if (path.endsWith(".css")) {
 
-                    if (path.endsWith(".css")) {
+    contentType =
+            "text/css; charset=UTF-8";
 
-                        contentType =
-                                "text/css";
+} else if (path.endsWith(".js")) {
 
-                    } else if (path.endsWith(".js")) {
+    contentType =
+            "application/javascript; charset=UTF-8";
+}
 
-                        contentType =
-                                "application/javascript";
-                    }
 
                     String responseHeader =
                             "HTTP/1.1 200 OK\r\n" +
