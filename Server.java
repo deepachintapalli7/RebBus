@@ -348,3 +348,269 @@ public class Server {
 
                         contentType =
                                 "application/javascript";
+                                            }
+
+                    String responseHeader =
+                            "HTTP/1.1 200 OK\r\n" +
+                            "Content-Type: " + contentType + "\r\n" +
+                            "Content-Length: " + data.length + "\r\n" +
+                            "Connection: close\r\n\r\n";
+
+                    output.write(
+                            responseHeader.getBytes("UTF-8")
+                    );
+
+                    output.write(data);
+                    output.flush();
+
+                } else {
+
+                    String notFound =
+                            "404 - File Not Found";
+
+                    byte[] response =
+                            notFound.getBytes("UTF-8");
+
+                    String responseHeader =
+                            "HTTP/1.1 404 Not Found\r\n" +
+                            "Content-Type: text/plain; charset=UTF-8\r\n" +
+                            "Content-Length: " + response.length + "\r\n" +
+                            "Connection: close\r\n\r\n";
+
+                    output.write(
+                            responseHeader.getBytes("UTF-8")
+                    );
+
+                    output.write(response);
+                    output.flush();
+                }
+
+                socket.close();
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    // ==========================================
+    // READ FILE
+    // ==========================================
+
+    private static byte[] readFile(File file)
+            throws IOException {
+
+        FileInputStream input =
+                new FileInputStream(file);
+
+        ByteArrayOutputStream output =
+                new ByteArrayOutputStream();
+
+        byte[] buffer = new byte[4096];
+
+        int bytesRead;
+
+        while ((bytesRead = input.read(buffer)) != -1) {
+            output.write(buffer, 0, bytesRead);
+        }
+
+        input.close();
+
+        return output.toByteArray();
+    }
+
+    // ==========================================
+    // SEND TEXT RESPONSE
+    // ==========================================
+
+    private static void sendTextResponse(
+            OutputStream output,
+            String message) throws IOException {
+
+        byte[] response =
+                message.getBytes("UTF-8");
+
+        String header =
+                "HTTP/1.1 200 OK\r\n" +
+                "Content-Type: text/plain; charset=UTF-8\r\n" +
+                "Content-Length: " + response.length + "\r\n" +
+                "Connection: close\r\n\r\n";
+
+        output.write(header.getBytes("UTF-8"));
+        output.write(response);
+        output.flush();
+    }
+
+    // ==========================================
+    // GET JSON VALUE
+    // ==========================================
+
+    private static String getJsonValue(
+            String json,
+            String key) {
+
+        String search =
+                "\"" + key + "\"";
+
+        int keyIndex =
+                json.indexOf(search);
+
+        if (keyIndex == -1) {
+            return "";
+        }
+
+        int colon =
+                json.indexOf(":", keyIndex);
+
+        if (colon == -1) {
+            return "";
+        }
+
+        int start =
+                json.indexOf("\"", colon);
+
+        if (start == -1) {
+            return "";
+        }
+
+        start++;
+
+        int end =
+                json.indexOf("\"", start);
+
+        if (end == -1) {
+            return "";
+        }
+
+        return json.substring(start, end);
+    }
+
+    // ==========================================
+    // GENERATE OTP
+    // ==========================================
+
+    private static String generateOTP() {
+
+        int number =
+                100000 + random.nextInt(900000);
+
+        return String.valueOf(number);
+    }
+
+    // ==========================================
+    // SEND OTP EMAIL
+    // ==========================================
+
+    private static boolean sendOTPEmail(
+            String recipient,
+            String otp) {
+
+        try {
+
+            String username =
+                    System.getenv("GMAIL_USERNAME");
+
+            String password =
+                    System.getenv("GMAIL_APP_PASSWORD");
+
+            Properties props =
+                    new Properties();
+
+            props.put(
+                    "mail.smtp.auth",
+                    "true"
+            );
+
+            props.put(
+                    "mail.smtp.starttls.enable",
+                    "true"
+            );
+
+            props.put(
+                    "mail.smtp.host",
+                    "smtp.gmail.com"
+            );
+
+            props.put(
+                    "mail.smtp.port",
+                    "587"
+            );
+
+            Session session =
+                    Session.getInstance(
+                            props,
+                            new Authenticator() {
+
+                                protected PasswordAuthentication
+                                getPasswordAuthentication() {
+
+                                    return new PasswordAuthentication(
+                                            username,
+                                            password
+                                    );
+                                }
+                            }
+                    );
+
+            Message message =
+                    new MimeMessage(session);
+
+            message.setFrom(
+                    new InternetAddress(username)
+            );
+
+            message.setRecipients(
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(recipient)
+            );
+
+            message.setSubject(
+                    "BookMyRoute - Your Login OTP"
+            );
+
+            message.setText(
+                    "Your BookMyRoute login OTP is: "
+                    + otp
+                    + "\n\nThis OTP is valid for 5 minutes."
+            );
+
+            Transport.send(message);
+
+            System.out.println(
+                    "OTP email sent to: " + recipient
+            );
+
+            return true;
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Failed to send OTP email."
+            );
+
+            e.printStackTrace();
+
+            return false;
+        }
+    }
+
+    // ==========================================
+    // OTP DATA
+    // ==========================================
+
+    private static class OTPData {
+
+        String otp;
+        long expiryTime;
+
+        OTPData(String otp) {
+
+            this.otp = otp;
+
+            this.expiryTime =
+                    System.currentTimeMillis()
+                    + (5 * 60 * 1000);
+        }
+    }
+}
