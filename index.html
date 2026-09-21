@@ -41,6 +41,14 @@
             <div>
                 <label>Journey Date</label>
                 <input type="date" id="journeyDate" min="">
+				<script>
+const today = new Date();
+const yyyy = today.getFullYear();
+const mm = String(today.getMonth() + 1).padStart(2, '0');
+const dd = String(today.getDate()).padStart(2, '0');
+
+document.getElementById("journeyDate").min = `${yyyy}-${mm}-${dd}`;
+</script>
             </div>
 
             <button onclick="searchBus()">🔍 Search Buses</button>
