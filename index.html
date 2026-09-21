@@ -1,266 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookMyRoute</title>
 
-    <title>BookMyRoute - Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #071952, #088395);
+            font-family: Arial, sans-serif;
+            color: white;
+        }
 
-    <link rel="stylesheet" href="style.css">
+        .box {
+            text-align: center;
+        }
+
+        .bus {
+            font-size: 80px;
+            animation: move 1.5s infinite alternate;
+        }
+
+        @keyframes move {
+            from {
+                transform: translateX(-15px);
+            }
+            to {
+                transform: translateX(15px);
+            }
+        }
+
+        h1 {
+            font-size: 35px;
+        }
+
+        button {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 10px;
+            background: white;
+            color: #071952;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
+    <div class="box">
 
-<aside class="sidebar">
+        <div class="bus">🚌</div>
 
-    <div class="logo">
-        🚌 BookMyRoute
-        <small>Travel smarter. Travel better.</small>
-    </div>
+        <h1>Welcome to BookMyRoute</h1>
 
-    <div class="menu-title">MAIN MENU</div>
+        <p>Your journey starts here...</p>
 
-    <a href="index.html" class="active">
-        <span class="sidebar-icon">🏠</span>
-        Dashboard
-    </a>
-
-    <a href="booking.html">
-        <span class="sidebar-icon">🎫</span>
-        Book a Bus
-    </a>
-
-    <a href="bookings.html">
-        <span class="sidebar-icon">📋</span>
-        My Bookings
-    </a>
-
-    <div class="menu-title">ACCOUNT</div>
-
-    <a href="account.html">
-        <span class="sidebar-icon">👤</span>
-        My Account
-    </a>
-
-    <a href="login.html">
-        <span class="sidebar-icon">🔐</span>
-        Login
-    </a>
-
-    <div class="menu-title">HELP</div>
-
-    <a href="support.html">
-        <span class="sidebar-icon">📞</span>
-        24/7 Support
-    </a>
-
-    <a href="about.html">
-        <span class="sidebar-icon">ℹ️</span>
-        About Us
-    </a>
-
-</aside>
-
-
-<!-- MAIN -->
-
-<div class="main">
-
-    <div class="topbar">
-
-        <div class="topbar-title">
-            Dashboard
-        </div>
-
-        <div class="user-mini">
-            👤 Guest
-        </div>
+        <button onclick="openLogin()">
+            Continue to Login →
+        </button>
 
     </div>
 
-
-    <div class="content">
-
-
-        <!-- HERO -->
-
-        <section class="hero">
-
-            <div>
-
-                <h1>Welcome to BookMyRoute 👋</h1>
-
-                <p>
-                    Your journey starts here.
-                    Search buses, choose your seat
-                    and travel with confidence.
-                </p>
-
-            </div>
-
-            <div class="hero-bus">
-                🚌
-            </div>
-
-        </section>
-
-
-        <!-- QUICK SEARCH -->
-
-        <div class="search-card">
-
-            <h2>🔎 Find Your Bus</h2>
-
-            <br>
-
-            <div class="search-grid">
-
-                <div class="field">
-
-                    <label>From</label>
-
-                    <input
-                        type="text"
-                        id="source"
-                        placeholder="Departure city">
-
-                </div>
-
-
-                <div class="field">
-
-                    <label>To</label>
-
-                    <input
-                        type="text"
-                        id="destination"
-                        placeholder="Destination city">
-
-                </div>
-
-
-                <div class="field">
-
-                    <label>Journey Date</label>
-
-                    <input
-                        type="date"
-                        id="journeyDate">
-
-                </div>
-
-
-                <button
-                    class="primary"
-                    onclick="searchBus()">
-
-                    🔍 Search
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- DASHBOARD CARDS -->
-
-        <div class="card-grid">
-
-            <div class="card">
-
-                <div class="stat-icon">🚌</div>
-
-                <h3>Available Buses</h3>
-
-                <p>
-                    Find buses for your route.
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <div class="stat-icon">💺</div>
-
-                <h3>Easy Seat Selection</h3>
-
-                <p>
-                    Pick the seat you want.
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <div class="stat-icon">🎫</div>
-
-                <h3>Quick Booking</h3>
-
-                <p>
-                    Book your journey in minutes.
-                </p>
-
-            </div>
-
-
-            <div class="card">
-
-                <div class="stat-icon">🔒</div>
-
-                <h3>Secure</h3>
-
-                <p>
-                    Your booking data is protected.
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <footer>
-
-            🚌 <strong>BookMyRoute</strong>
-
-            <br><br>
-
-            Travel smarter. Travel better.
-
-            <br><br>
-
-            © 2026 BookMyRoute
-
-        </footer>
-
-    </div>
-
-</div>
-
-
-<script>
-
-const today = new Date();
-
-const yyyy = today.getFullYear();
-
-const mm =
-    String(today.getMonth() + 1).padStart(2, '0');
-
-const dd =
-    String(today.getDate()).padStart(2, '0');
-
-document.getElementById("journeyDate").min =
-    `${yyyy}-${mm}-${dd}`;
-
-</script>
-
-<script src="script.js"></script>
+    <script>
+        function openLogin() {
+            window.location.href = "login.html";
+        }
+    </script>
 
 </body>
 </html>
