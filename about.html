@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BookMyRoute - About Us</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+        }
+
+        .sidebar {
+            position: fixed;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg,#071952,#088395);
+            padding: 25px 15px;
+            color: white;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+
+        .menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            margin: 7px 0;
+            border-radius: 12px;
+        }
+
+        .menu a:hover,
+        .menu .active {
+            background: rgba(255,255,255,.2);
+        }
+
+        .main {
+            margin-left: 250px;
+            padding: 35px;
+        }
+
+        h1 {
+            color: #071952;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg,#071952,#088395,#35A29F);
+            color: white;
+            padding: 45px;
+            border-radius: 25px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .hero-icon {
+            font-size: 70px;
+            margin-bottom: 15px;
+        }
+
+        .hero h2 {
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: auto;
+            line-height: 1.7;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 7px 20px rgba(0,0,0,.07);
+        }
+
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .card h2 {
+            color: #071952;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #777;
+            line-height: 1.6;
+        }
+
+        .mission {
+            margin-top: 25px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 7px 20px rgba(0,0,0,.07);
+        }
+
+        .mission h2 {
+            color: #071952;
+            margin-bottom: 12px;
+        }
+
+        .mission p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        @media(max-width:900px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width:800px) {
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                margin-left: 190px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">
+        🚌 BookMyRoute
+    </div>
+
+    <div class="menu">
+
+        <a href="dashboard.html">
+            🏠 Dashboard
+        </a>
+
+        <a href="booking.html">
+            🎫 Book a Bus
+        </a>
+
+        <a href="bookings.html">
+            📋 My Bookings
+        </a>
+
+        <a href="account.html">
+            👤 My Account
+        </a>
+
+        <a href="support.html">
+            📞 24/7 Support
+        </a>
+
+        <a href="about.html" class="active">
+            ℹ️ About Us
+        </a>
+
+        <a href="login.html">
+            🚪 Logout
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="main">
+
+    <h1>ℹ️ About BookMyRoute</h1>
+
+    <p class="subtitle">
+        Smart travel. Simple booking. Better journeys.
+    </p>
+
+
+    <div class="hero">
+
+        <div class="hero-icon">🚌</div>
+
+        <h2>Welcome to BookMyRoute</h2>
+
+        <p>
+            BookMyRoute is a simple bus booking system designed
+            to make finding routes, selecting seats and managing
+            bus bookings easier and more convenient.
+        </p>
+
+    </div>
+
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="card-icon">🎫</div>
+
+            <h2>Easy Booking</h2>
+
+            <p>
+                Search for your journey, choose a bus,
+                select your preferred seat and complete
+                your booking in a simple process.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">🗺️</div>
+
+            <h2>Simple Routes</h2>
+
+            <p>
+                Explore available routes and bus services
+                from one convenient platform.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">🔒
