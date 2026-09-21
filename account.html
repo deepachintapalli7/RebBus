@@ -104,34 +104,57 @@
             border-radius: 12px;
         }
 
-        .detail span {
+        .detail label {
             display: block;
             color: #777;
             font-size: 13px;
             margin-bottom: 7px;
         }
 
-        .detail strong {
-            color: #071952;
-            font-size: 16px;
+        .detail input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
         }
 
-        .edit-btn {
+        .buttons {
             margin-top: 30px;
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
             padding: 13px 25px;
             border: none;
             border-radius: 10px;
-            background: #088395;
-            color: white;
             font-weight: bold;
             cursor: pointer;
         }
 
-        .edit-btn:hover {
-            background: #071952;
+        .edit-btn,
+        .save-btn {
+            background: #088395;
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #ddd;
+            color: #333;
+        }
+
+        .save-btn,
+        .cancel-btn {
+            display: none;
+        }
+
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
         }
 
         @media(max-width:800px) {
+
             .sidebar {
                 width: 190px;
             }
@@ -157,33 +180,21 @@
 
     <div class="menu">
 
-        <a href="dashboard.html">
-            🏠 Dashboard
-        </a>
+        <a href="dashboard.html">🏠 Dashboard</a>
 
-        <a href="booking.html">
-            🎫 Book a Bus
-        </a>
+        <a href="booking.html">🎫 Book a Bus</a>
 
-        <a href="bookings.html">
-            📋 My Bookings
-        </a>
+        <a href="bookings.html">📋 My Bookings</a>
 
         <a href="account.html" class="active">
             👤 My Account
         </a>
 
-        <a href="support.html">
-            📞 24/7 Support
-        </a>
+        <a href="support.html">📞 24/7 Support</a>
 
-        <a href="about.html">
-            ℹ️ About Us
-        </a>
+        <a href="about.html">ℹ️ About Us</a>
 
-        <a href="login.html">
-            🚪 Logout
-        </a>
+        <a href="login.html">🚪 Logout</a>
 
     </div>
 
@@ -203,8 +214,13 @@
             </div>
 
             <div>
-                <h2>Traveler</h2>
-                <p>BookMyRoute Member</p>
+                <h2 id="displayName">
+                    Traveler
+                </h2>
+
+                <p>
+                    BookMyRoute Member
+                </p>
             </div>
 
         </div>
@@ -213,38 +229,85 @@
         <div class="details">
 
             <div class="detail">
-                <span>Username</span>
-                <strong id="username">
-                    Traveler
-                </strong>
+
+                <label>Full Name</label>
+
+                <input
+                    id="name"
+                    value="Traveler"
+                    disabled
+                >
+
             </div>
 
-            <div class="detail">
-                <span>Email</span>
-                <strong>
-                    Not added
-                </strong>
-            </div>
 
             <div class="detail">
-                <span>Phone</span>
-                <strong>
-                    Not added
-                </strong>
+
+                <label>Gmail</label>
+
+                <input
+                    id="email"
+                    value="Not added"
+                    disabled
+                >
+
             </div>
 
+
             <div class="detail">
-                <span>Member Since</span>
-                <strong>
-                    2026
-                </strong>
+
+                <label>Phone</label>
+
+                <input
+                    id="phone"
+                    value="Not added"
+                    disabled
+                >
+
+            </div>
+
+
+            <div class="detail">
+
+                <label>Username</label>
+
+                <input
+                    id="username"
+                    value="Traveler"
+                    disabled
+                >
+
             </div>
 
         </div>
 
-        <button class="edit-btn" onclick="editProfile()">
-            ✏️ Edit Profile
-        </button>
+
+        <div class="buttons">
+
+            <button
+                class="edit-btn"
+                id="editBtn"
+                onclick="editProfile()">
+                ✏️ Edit Profile
+            </button>
+
+            <button
+                class="save-btn"
+                id="saveBtn"
+                onclick="saveProfile()">
+                💾 Save Changes
+            </button>
+
+            <button
+                class="cancel-btn"
+                id="cancelBtn"
+                onclick="cancelEdit()">
+                Cancel
+            </button>
+
+        </div>
+
+        <p id="message"></p>
 
     </div>
 
@@ -255,10 +318,90 @@
 
 function editProfile() {
 
-    alert(
-        "Profile editing will be connected to the user database later."
-    );
+    document
+        .querySelectorAll(".detail input")
+        .forEach(input => {
+            input.disabled = false;
+        });
 
+    document.getElementById("editBtn")
+        .style.display = "none";
+
+    document.getElementById("saveBtn")
+        .style.display = "block";
+
+    document.getElementById("cancelBtn")
+        .style.display = "block";
+}
+
+
+function saveProfile() {
+
+    const name =
+        document.getElementById("name").value;
+
+    const email =
+        document.getElementById("email").value;
+
+    const phone =
+        document.getElementById("phone").value;
+
+    const username =
+        document.getElementById("username").value;
+
+
+    if (!name || !email || !phone || !username) {
+
+        document.getElementById("message").innerText =
+            "❌ Please fill all fields.";
+
+        return;
+    }
+
+
+    document.getElementById("displayName")
+        .innerText = name;
+
+    document
+        .querySelectorAll(".detail input")
+        .forEach(input => {
+            input.disabled = true;
+        });
+
+    document.getElementById("editBtn")
+        .style.display = "block";
+
+    document.getElementById("saveBtn")
+        .style.display = "none";
+
+    document.getElementById("cancelBtn")
+        .style.display = "none";
+
+    document.getElementById("message").innerText =
+        "✅ Profile updated successfully.";
+
+}
+
+
+function cancelEdit() {
+
+    document
+        .querySelectorAll(".detail input")
+        .forEach(input => {
+            input.disabled = true;
+        });
+
+    document.getElementById("editBtn")
+        .style.display = "block";
+
+    document.getElementById("saveBtn")
+        .style.display = "none";
+
+    document.getElementById("cancelBtn")
+        .style.display = "none";
+
+    document.getElementById("message").innerText =
+        "";
 }
 
 </script>
