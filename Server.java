@@ -347,4 +347,4 @@ public class Server {
                     } else if (path.endsWith(".js")) {
 
                         contentType =
-                                "
+                                "application/javascript";
