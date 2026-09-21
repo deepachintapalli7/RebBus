@@ -541,12 +541,10 @@ public class Server {
                     Session.getInstance(
                             props,
 new javax.mail.Authenticator() {
-                                protected PasswordAuthentication
-                                getPasswordAuthentication() {
+javax.mail.PasswordAuthentication                                getPasswordAuthentication() {
 
                                     return new PasswordAuthentication(
-                                            username,
-                                            password
+javax.mail.PasswordAuthentication                                            password
                                     );
                                 }
                             }
