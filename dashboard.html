@@ -92,8 +92,7 @@
             border-radius: 25px;
             position: relative;
             overflow: hidden;
-            background:
-                linear-gradient(180deg,#56ccf2,#2f80ed);
+            background: linear-gradient(180deg,#56ccf2,#2f80ed);
             color: white;
             padding: 45px;
             box-shadow: 0 15px 30px rgba(0,0,0,0.15);
@@ -188,36 +187,86 @@
             position: absolute;
             bottom: 48px;
             left: -180px;
-            font-size: 85px;
+            width: 110px;
+            height: 90px;
             z-index: 10;
 
             animation: busDrive 9s linear infinite;
+
+            filter: drop-shadow(0 8px 5px rgba(0,0,0,0.25));
         }
 
-       @keyframes busDrive {
+        /* Bus faces RIGHT */
 
-    0% {
-        left: 110%;
-        transform: scaleX(-1);
-    }
+        .bus-emoji {
+            display: block;
+            font-size: 85px;
 
-    45% {
-        transform: scaleX(-1) rotate(-1deg);
-    }
+            transform: scaleX(-1);
 
-    50% {
-        transform: scaleX(-1) rotate(1deg);
-    }
+            animation: busBounce 0.45s ease-in-out infinite alternate;
+        }
 
-    55% {
-        transform: scaleX(-1) rotate(-1deg);
-    }
+        /* Exhaust */
 
-    100% {
-        left: -180px;
-        transform: scaleX(-1);
-    }
-}
+        .exhaust {
+            position: absolute;
+            left: -5px;
+            bottom: 18px;
+            font-size: 25px;
+            opacity: 0.8;
+
+            animation: exhaustMove 0.8s ease-out infinite;
+        }
+
+        /* LEFT → RIGHT */
+
+        @keyframes busDrive {
+
+            0% {
+                left: -180px;
+            }
+
+            100% {
+                left: 110%;
+            }
+        }
+
+        /* Bus bouncing */
+
+        @keyframes busBounce {
+
+            0% {
+                transform: scaleX(-1) translateY(0) rotate(-1deg);
+            }
+
+            50% {
+                transform: scaleX(-1) translateY(-3px) rotate(1deg);
+            }
+
+            100% {
+                transform: scaleX(-1) translateY(0) rotate(-1deg);
+            }
+        }
+
+        /* Exhaust moving backwards */
+
+        @keyframes exhaustMove {
+
+            0% {
+                transform: translateX(0) scale(0.6);
+                opacity: 0;
+            }
+
+            30% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateX(-35px) scale(1.3);
+                opacity: 0;
+            }
+        }
 
         /* ================= SEARCH ================= */
 
@@ -491,7 +540,7 @@
                 font-size: 28px;
             }
 
-            .bus {
+            .bus-emoji {
                 font-size: 60px;
             }
 
@@ -556,8 +605,6 @@
 
         <h1>Welcome to BookMyRoute 👋</h1>
 
-        <!-- TRAVELER NOW OPENS ACCOUNT -->
-
         <div
             class="profile"
             onclick="openProfile()"
@@ -584,9 +631,18 @@
         </p>
 
         <div class="bus">
-    <span class="bus-emoji">🚌</span>
-    <span class="exhaust">💨</span>
-</div>
+
+            <span class="bus-emoji">🚌</span>
+
+            <span class="exhaust">💨</span>
+
+        </div>
+
+        <div class="road">
+            <div class="road-lines"></div>
+        </div>
+
+    </div>
 
 
     <!-- ================= SEARCH ================= -->
@@ -942,13 +998,9 @@ function searchBus() {
         document.getElementById("resultsContainer");
 
 
-    /* Clear old results */
-
     container.innerHTML = "";
     results.style.display = "none";
 
-
-    /* Check empty fields */
 
     if (!fromInput || !toInput || !date) {
 
@@ -961,18 +1013,12 @@ function searchBus() {
     }
 
 
-    /* Convert to lowercase for case-insensitive checking */
-
     const from =
         fromInput.toLowerCase();
 
     const to =
         toInput.toLowerCase();
 
-
-    /* ==========================================
-       EXACT CITY SPELLING CHECK
-       ========================================== */
 
     if (!validCities.includes(from)) {
 
@@ -996,8 +1042,6 @@ function searchBus() {
     }
 
 
-    /* Same city check */
-
     if (from === to) {
 
         showMessage(
@@ -1008,10 +1052,6 @@ function searchBus() {
         return;
     }
 
-
-    /* ==========================================
-       FIND MATCHING BUSES
-       ========================================== */
 
     const matchingBuses =
         buses.filter(function(bus) {
@@ -1037,10 +1077,6 @@ function searchBus() {
     }
 
 
-    /* ==========================================
-       SHOW SUCCESS MESSAGE
-       ========================================== */
-
     showMessage(
         "✅ " +
         matchingBuses.length +
@@ -1052,10 +1088,6 @@ function searchBus() {
         "success"
     );
 
-
-    /* ==========================================
-       CREATE BUS CARDS
-       ========================================== */
 
     matchingBuses.forEach(function(bus) {
 
@@ -1076,7 +1108,6 @@ function searchBus() {
                 </div>
             </div>
 
-
             <div>
                 <div class="time">
                     🕐 ${bus.departure}
@@ -1086,7 +1117,6 @@ function searchBus() {
                     Departure
                 </div>
             </div>
-
 
             <div>
                 <div class="time">
@@ -1098,7 +1128,6 @@ function searchBus() {
                 </div>
             </div>
 
-
             <div>
                 <div class="price">
                     ₹${bus.price}
@@ -1108,7 +1137,6 @@ function searchBus() {
                     🪑 ${bus.seats} seats available
                 </div>
             </div>
-
 
             <div>
                 <button
@@ -1128,8 +1156,6 @@ function searchBus() {
 
     results.style.display = "block";
 
-
-    /* Scroll to results */
 
     setTimeout(function() {
 
