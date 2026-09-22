@@ -1086,16 +1086,53 @@ function bookTicket() {
     })
 
 
-    .then(function(data) {
+.then(function(data) {
 
-        console.log(data);
+    console.log(data);
+
+    const booking = {
+
+        name: name,
+        from: from,
+        to: to,
+        journeyDate: journeyDate,
+
+        busName: selectedBus.name,
+        busNumber: selectedBus.busNumber,
+        busType: selectedBus.type,
+
+        departure: selectedBus.departure,
+        arrival: selectedBus.arrival,
+
+        price: selectedBus.price,
+
+        seat: selectedSeat,
+
+        phone: phone,
+        email: email
+
+    };
 
 
-        document.getElementById("message").innerText =
-            "✅ Booking submitted successfully!";
+    const existingBookings =
+        JSON.parse(
+            localStorage.getItem("bookMyRouteBookings")
+        ) || [];
 
 
-    })
+    existingBookings.push(booking);
+
+
+    localStorage.setItem(
+        "bookMyRouteBookings",
+        JSON.stringify(existingBookings)
+    );
+
+
+    document.getElementById("message").innerText =
+        "✅ Booking submitted successfully!";
+
+})
 
 
     .catch(function(error) {
