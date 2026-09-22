@@ -76,6 +76,13 @@
             padding: 12px 20px;
             border-radius: 25px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .profile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
         }
 
         /* ================= HERO ================= */
@@ -257,6 +264,89 @@
             background: #071952;
         }
 
+        /* ================= SEARCH MESSAGE ================= */
+
+        .search-message {
+            margin-top: 18px;
+            padding: 14px;
+            border-radius: 10px;
+            display: none;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .error-message {
+            background: #ffe5e5;
+            color: #d00000;
+        }
+
+        .success-message {
+            background: #e5fff1;
+            color: #087443;
+        }
+
+        /* ================= BUS RESULTS ================= */
+
+        .bus-results {
+            display: none;
+            margin-top: 25px;
+        }
+
+        .bus-results h2 {
+            color: #071952;
+            margin-bottom: 15px;
+        }
+
+        .bus-card {
+            background: white;
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 1fr 1fr auto;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bus-name {
+            color: #071952;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .bus-info {
+            color: #666;
+            margin-top: 6px;
+            font-size: 14px;
+        }
+
+        .time {
+            font-size: 17px;
+            font-weight: bold;
+            color: #071952;
+        }
+
+        .price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #088395;
+        }
+
+        .book-result-btn {
+            background: #088395;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .book-result-btn:hover {
+            background: #071952;
+        }
+
         /* ================= STATS ================= */
 
         .stats {
@@ -374,6 +464,10 @@
             .search-grid {
                 grid-template-columns: 1fr 1fr;
             }
+
+            .bus-card {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
         @media(max-width:700px) {
@@ -399,6 +493,10 @@
 
             .bus {
                 font-size: 60px;
+            }
+
+            .bus-card {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -458,7 +556,13 @@
 
         <h1>Welcome to BookMyRoute 👋</h1>
 
-        <div class="profile">
+        <!-- TRAVELER NOW OPENS ACCOUNT -->
+
+        <div
+            class="profile"
+            onclick="openProfile()"
+            title="Open My Account"
+        >
             👤 Traveler
         </div>
 
@@ -524,6 +628,25 @@
 
         </div>
 
+        <div
+            id="searchMessage"
+            class="search-message"
+        ></div>
+
+    </div>
+
+
+    <!-- ================= BUS RESULTS ================= -->
+
+    <div
+        id="busResults"
+        class="bus-results"
+    >
+
+        <h2>🚌 Available Buses</h2>
+
+        <div id="resultsContainer"></div>
+
     </div>
 
 
@@ -541,13 +664,13 @@
 
         <div class="stat">
             <div class="stat-icon">🚌</div>
-            <h2>3</h2>
+            <h2>9</h2>
             <p>Available Buses</p>
         </div>
 
         <div class="stat">
             <div class="stat-icon">📍</div>
-            <h2>3</h2>
+            <h2>6</h2>
             <p>Popular Routes</p>
         </div>
 
@@ -666,53 +789,423 @@
 
 <script>
 
-    function searchBus() {
+/* ==========================================
+   BUS DATABASE FOR DASHBOARD SEARCH
+   ========================================== */
 
-        const from =
-            document.getElementById("from").value;
+const buses = [
 
-        const to =
-            document.getElementById("to").value;
+    {
+        from: "bhimavaram",
+        to: "visakhapatnam",
+        name: "Sri Krishna Travels",
+        departure: "06:30 AM",
+        arrival: "12:30 PM",
+        type: "AC Seater",
+        seats: 32,
+        price: 550
+    },
 
-        const date =
-            document.getElementById("date").value;
+    {
+        from: "bhimavaram",
+        to: "visakhapatnam",
+        name: "APSRTC Super Luxury",
+        departure: "09:00 AM",
+        arrival: "03:15 PM",
+        type: "Non-AC Seater",
+        seats: 41,
+        price: 420
+    },
 
-        if (!from || !to || !date) {
+    {
+        from: "bhimavaram",
+        to: "visakhapatnam",
+        name: "Coastal Express",
+        departure: "07:45 PM",
+        arrival: "01:30 AM",
+        type: "AC Sleeper",
+        seats: 20,
+        price: 750
+    },
 
-            alert(
-                "Please enter From, To and Journey Date."
-            );
+    {
+        from: "bhimavaram",
+        to: "mandapeta",
+        name: "Godavari Travels",
+        departure: "07:00 AM",
+        arrival: "09:00 AM",
+        type: "AC Seater",
+        seats: 35,
+        price: 250
+    },
 
-            return;
-        }
+    {
+        from: "bhimavaram",
+        to: "mandapeta",
+        name: "Konaseema Express",
+        departure: "02:30 PM",
+        arrival: "04:30 PM",
+        type: "Non-AC Seater",
+        seats: 38,
+        price: 180
+    },
 
-        window.location.href =
-            "booking.html?from=" +
-            encodeURIComponent(from) +
-            "&to=" +
-            encodeURIComponent(to) +
-            "&date=" +
-            encodeURIComponent(date);
+    {
+        from: "bhimavaram",
+        to: "hyderabad",
+        name: "Orange Travels",
+        departure: "08:30 PM",
+        arrival: "06:00 AM",
+        type: "AC Sleeper",
+        seats: 25,
+        price: 950
+    },
+
+    {
+        from: "hyderabad",
+        to: "bangalore",
+        name: "Orange Travels",
+        departure: "09:30 PM",
+        arrival: "07:00 AM",
+        type: "AC Sleeper",
+        seats: 40,
+        price: 1200
+    },
+
+    {
+        from: "chennai",
+        to: "hyderabad",
+        name: "VRL Travels",
+        departure: "08:00 PM",
+        arrival: "06:30 AM",
+        type: "AC Seater",
+        seats: 45,
+        price: 1050
+    },
+
+    {
+        from: "bangalore",
+        to: "chennai",
+        name: "SRS Travels",
+        departure: "10:00 PM",
+        arrival: "05:30 AM",
+        type: "Non-AC Seater",
+        seats: 35,
+        price: 700
+    }
+
+];
+
+
+/* ==========================================
+   VALID CITY NAMES
+   ========================================== */
+
+const validCities = [
+    "bhimavaram",
+    "visakhapatnam",
+    "mandapeta",
+    "hyderabad",
+    "bangalore",
+    "chennai"
+];
+
+
+/* ==========================================
+   OPEN PROFILE
+   ========================================== */
+
+function openProfile() {
+
+    window.location.href = "account.html";
+
+}
+
+
+/* ==========================================
+   SEARCH BUSES
+   ========================================== */
+
+function searchBus() {
+
+    const fromInput =
+        document.getElementById("from").value.trim();
+
+    const toInput =
+        document.getElementById("to").value.trim();
+
+    const date =
+        document.getElementById("date").value;
+
+    const message =
+        document.getElementById("searchMessage");
+
+    const results =
+        document.getElementById("busResults");
+
+    const container =
+        document.getElementById("resultsContainer");
+
+
+    /* Clear old results */
+
+    container.innerHTML = "";
+    results.style.display = "none";
+
+
+    /* Check empty fields */
+
+    if (!fromInput || !toInput || !date) {
+
+        showMessage(
+            "❌ Please enter From, To and Journey Date.",
+            "error"
+        );
+
+        return;
     }
 
 
-    /* Prevent past dates */
+    /* Convert to lowercase for case-insensitive checking */
 
-    const today = new Date();
+    const from =
+        fromInput.toLowerCase();
 
-    const yyyy =
-        today.getFullYear();
+    const to =
+        toInput.toLowerCase();
 
-    const mm =
-        String(today.getMonth() + 1)
-        .padStart(2, "0");
 
-    const dd =
-        String(today.getDate())
-        .padStart(2, "0");
+    /* ==========================================
+       EXACT CITY SPELLING CHECK
+       ========================================== */
 
-    document.getElementById("date").min =
-        `${yyyy}-${mm}-${dd}`;
+    if (!validCities.includes(from)) {
+
+        showMessage(
+            "❌ From city name is incorrect.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (!validCities.includes(to)) {
+
+        showMessage(
+            "❌ To city name is incorrect.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    /* Same city check */
+
+    if (from === to) {
+
+        showMessage(
+            "❌ From and To cities cannot be the same.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    /* ==========================================
+       FIND MATCHING BUSES
+       ========================================== */
+
+    const matchingBuses =
+        buses.filter(function(bus) {
+
+            return bus.from === from &&
+                   bus.to === to;
+
+        });
+
+
+    if (matchingBuses.length === 0) {
+
+        showMessage(
+            "❌ No buses available for " +
+            fromInput +
+            " → " +
+            toInput +
+            ".",
+            "error"
+        );
+
+        return;
+    }
+
+
+    /* ==========================================
+       SHOW SUCCESS MESSAGE
+       ========================================== */
+
+    showMessage(
+        "✅ " +
+        matchingBuses.length +
+        " bus(es) found for " +
+        fromInput +
+        " → " +
+        toInput +
+        ".",
+        "success"
+    );
+
+
+    /* ==========================================
+       CREATE BUS CARDS
+       ========================================== */
+
+    matchingBuses.forEach(function(bus) {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "bus-card";
+
+        card.innerHTML = `
+
+            <div>
+                <div class="bus-name">
+                    🚌 ${bus.name}
+                </div>
+
+                <div class="bus-info">
+                    ${bus.type}
+                </div>
+            </div>
+
+
+            <div>
+                <div class="time">
+                    🕐 ${bus.departure}
+                </div>
+
+                <div class="bus-info">
+                    Departure
+                </div>
+            </div>
+
+
+            <div>
+                <div class="time">
+                    🕐 ${bus.arrival}
+                </div>
+
+                <div class="bus-info">
+                    Arrival
+                </div>
+            </div>
+
+
+            <div>
+                <div class="price">
+                    ₹${bus.price}
+                </div>
+
+                <div class="bus-info">
+                    🪑 ${bus.seats} seats available
+                </div>
+            </div>
+
+
+            <div>
+                <button
+                    class="book-result-btn"
+                    onclick="bookBus('${bus.from}', '${bus.to}', '${date}')"
+                >
+                    Book →
+                </button>
+            </div>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+
+    results.style.display = "block";
+
+
+    /* Scroll to results */
+
+    setTimeout(function() {
+
+        results.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    }, 100);
+
+}
+
+
+/* ==========================================
+   SEARCH MESSAGE
+   ========================================== */
+
+function showMessage(text, type) {
+
+    const message =
+        document.getElementById("searchMessage");
+
+    message.innerText = text;
+
+    message.style.display = "block";
+
+    message.className =
+        "search-message " +
+        (type === "error"
+            ? "error-message"
+            : "success-message");
+
+}
+
+
+/* ==========================================
+   BOOK SELECTED BUS
+   ========================================== */
+
+function bookBus(from, to, date) {
+
+    window.location.href =
+        "booking.html?from=" +
+        encodeURIComponent(from) +
+        "&to=" +
+        encodeURIComponent(to) +
+        "&date=" +
+        encodeURIComponent(date);
+
+}
+
+
+/* ==========================================
+   PREVENT PAST DATES
+   ========================================== */
+
+const today = new Date();
+
+const yyyy =
+    today.getFullYear();
+
+const mm =
+    String(today.getMonth() + 1)
+    .padStart(2, "0");
+
+const dd =
+    String(today.getDate())
+    .padStart(2, "0");
+
+document.getElementById("date").min =
+    `${yyyy}-${mm}-${dd}`;
 
 </script>
 
