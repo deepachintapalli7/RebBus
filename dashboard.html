@@ -194,30 +194,30 @@
             animation: busDrive 9s linear infinite;
         }
 
-        @keyframes busDrive {
+       @keyframes busDrive {
 
-            0% {
-                left: -180px;
-                transform: rotate(0deg);
-            }
+    0% {
+        left: 110%;
+        transform: scaleX(-1);
+    }
 
-            45% {
-                transform: rotate(-1deg);
-            }
+    45% {
+        transform: scaleX(-1) rotate(-1deg);
+    }
 
-            50% {
-                transform: rotate(1deg);
-            }
+    50% {
+        transform: scaleX(-1) rotate(1deg);
+    }
 
-            55% {
-                transform: rotate(-1deg);
-            }
+    55% {
+        transform: scaleX(-1) rotate(-1deg);
+    }
 
-            100% {
-                left: 110%;
-                transform: rotate(0deg);
-            }
-        }
+    100% {
+        left: -180px;
+        transform: scaleX(-1);
+    }
+}
 
         /* ================= SEARCH ================= */
 
