@@ -3,6 +3,9 @@
 <head>
     <title>BookMyRoute - Login</title>
 
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -136,6 +139,11 @@
             transform: scale(1.02);
         }
 
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .otp-section {
             display: none;
         }
@@ -183,7 +191,6 @@
         Secure login with Gmail OTP
     </p>
 
-
     <!-- GMAIL -->
 
     <div id="emailSection">
@@ -197,7 +204,7 @@
             required
         >
 
-        <button onclick="sendOTP()">
+        <button id="sendButton" onclick="sendOTP()">
             Send OTP 📩
         </button>
 
@@ -215,6 +222,7 @@
             id="otp"
             placeholder="Enter 6-digit OTP"
             maxlength="6"
+            inputmode="numeric"
         >
 
         <button onclick="verifyOTP()">
@@ -247,6 +255,19 @@
 
 <script>
 
+/* ==========================================
+   EMAILJS INITIALIZATION
+   ========================================== */
+
+emailjs.init({
+    publicKey: "hfiFvOzOwwDN2Oaxs"
+});
+
+
+/* ==========================================
+   SEND OTP
+   ========================================== */
+
 function sendOTP() {
 
     const email =
@@ -254,6 +275,10 @@ function sendOTP() {
 
     const message =
         document.getElementById("message");
+
+    const sendButton =
+        document.getElementById("sendButton");
+
 
     if (!email) {
 
@@ -264,6 +289,7 @@ function sendOTP() {
 
         return;
     }
+
 
     if (!email.toLowerCase().endsWith("@gmail.com")) {
 
@@ -276,42 +302,55 @@ function sendOTP() {
     }
 
 
-    /*
-       REAL OTP BACKEND WILL BE CONNECTED HERE.
+    // Generate 6-digit OTP
+    const otp =
+        Math.floor(100000 + Math.random() * 900000).toString();
 
-       The Java server will:
-       1. Receive Gmail
-       2. Generate a secure OTP
-       3. Send OTP through email
-       4. Store OTP temporarily
-    */
 
-    fetch("/send-otp", {
+    // Store OTP temporarily in browser
+    sessionStorage.setItem("bookmyroute_otp", otp);
+    sessionStorage.setItem(
+        "bookmyroute_otp_time",
+        Date.now().toString()
+    );
 
-        method: "POST",
+    sessionStorage.setItem(
+        "bookmyroute_email",
+        email
+    );
 
-        headers: {
-            "Content-Type": "application/json"
-        },
 
-        body: JSON.stringify({
-            email: email
-        })
+    sendButton.disabled = true;
+    sendButton.innerText = "Sending OTP...";
 
-    })
 
-    .then(response => response.text())
+    const templateParams = {
 
-.then(data => {
+        to_email: email,
 
-    console.log("Server response:", data);
+        otp: otp
+    };
 
-    if (data === "OTP_SENT") {
+
+    emailjs.send(
+        "service_g3kqc7k",
+        "template_fj17g5p",
+        templateParams
+    )
+
+    .then(function(response) {
+
+        console.log(
+            "EmailJS SUCCESS:",
+            response.status,
+            response.text
+        );
 
         message.innerText =
-            "📩 OTP sent to your Gmail.";
+            "📩 OTP sent to your Gmail!";
 
         message.style.color = "green";
+
 
         document.getElementById("emailSection")
             .style.display = "none";
@@ -322,55 +361,56 @@ function sendOTP() {
         document.getElementById("backButton")
             .style.display = "block";
 
-    } else if (data === "EMAIL_FAILED") {
+
+        sendButton.disabled = false;
+        sendButton.innerText = "Send OTP 📩";
+
+    })
+
+    .catch(function(error) {
+
+        console.error(
+            "EmailJS ERROR:",
+            error
+        );
 
         message.innerText =
-            "❌ Email could not be sent. Check Gmail settings.";
+            "❌ Could not send OTP. Check EmailJS settings.";
 
         message.style.color = "red";
 
-    } else if (data === "INVALID_EMAIL") {
 
-        message.innerText =
-            "❌ Please use a Gmail address.";
-
-        message.style.color = "red";
-
-    } else {
-
-        message.innerText =
-            "❌ Server error: " + data;
-
-        message.style.color = "red";
-    }
-
-})
-    .catch(error => {
-
-        console.error(error);
-
-        message.innerText =
-            "❌ Unable to send OTP. Please try again.";
-
-        message.style.color = "red";
+        sendButton.disabled = false;
+        sendButton.innerText = "Send OTP 📩";
 
     });
 }
 
 
+/* ==========================================
+   VERIFY OTP
+   ========================================== */
+
 function verifyOTP() {
 
-    const email =
-        document.getElementById("email").value;
-
-    const otp =
+    const enteredOTP =
         document.getElementById("otp").value.trim();
+
+    const savedOTP =
+        sessionStorage.getItem(
+            "bookmyroute_otp"
+        );
+
+    const savedTime =
+        sessionStorage.getItem(
+            "bookmyroute_otp_time"
+        );
 
     const message =
         document.getElementById("message");
 
 
-    if (otp.length !== 6) {
+    if (enteredOTP.length !== 6) {
 
         message.innerText =
             "❌ Enter the 6-digit OTP.";
@@ -381,53 +421,80 @@ function verifyOTP() {
     }
 
 
-    fetch("/verify-otp", {
+    if (!savedOTP || !savedTime) {
 
-        method: "POST",
+        message.innerText =
+            "❌ Please request a new OTP.";
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+        message.style.color = "red";
 
-        body: JSON.stringify({
-            email: email,
-            otp: otp
-        })
+        return;
+    }
 
-    })
 
-    .then(response => response.text())
+    // 5-minute expiry
+    const fiveMinutes =
+        5 * 60 * 1000;
 
-    .then(data => {
+    if (
+        Date.now() - parseInt(savedTime)
+        > fiveMinutes
+    ) {
 
-        if (data === "SUCCESS") {
+        sessionStorage.removeItem(
+            "bookmyroute_otp"
+        );
+
+        sessionStorage.removeItem(
+            "bookmyroute_otp_time"
+        );
+
+        message.innerText =
+            "❌ OTP expired. Please request a new one.";
+
+        message.style.color = "red";
+
+        return;
+    }
+
+
+    if (enteredOTP === savedOTP) {
+
+        sessionStorage.removeItem(
+            "bookmyroute_otp"
+        );
+
+        sessionStorage.removeItem(
+            "bookmyroute_otp_time"
+        );
+
+
+        message.innerText =
+            "✅ Login successful!";
+
+        message.style.color = "green";
+
+
+        setTimeout(function() {
 
             window.location.href =
                 "dashboard.html";
 
-        } else {
+        }, 500);
 
-            message.innerText =
-                "❌ Invalid or expired OTP.";
-
-            message.style.color = "red";
-
-        }
-
-    })
-
-    .catch(error => {
-
-        console.error(error);
+    } else {
 
         message.innerText =
-            "❌ Verification failed.";
+            "❌ Invalid OTP.";
 
         message.style.color = "red";
-
-    });
+    }
 }
 
+
+/* ==========================================
+   GO BACK
+   ========================================== */
 
 function goBack() {
 
@@ -442,6 +509,14 @@ function goBack() {
 
     document.getElementById("otp")
         .value = "";
+
+    sessionStorage.removeItem(
+        "bookmyroute_otp"
+    );
+
+    sessionStorage.removeItem(
+        "bookmyroute_otp_time"
+    );
 }
 
 </script>
