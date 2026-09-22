@@ -4,6 +4,7 @@
     <title>BookMyRoute - My Bookings</title>
 
     <style>
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -14,6 +15,8 @@
         body {
             background: #f4f7fb;
         }
+
+        /* ================= SIDEBAR ================= */
 
         .sidebar {
             position: fixed;
@@ -45,6 +48,8 @@
             background: rgba(255,255,255,.2);
         }
 
+        /* ================= MAIN ================= */
+
         .main {
             margin-left: 250px;
             padding: 35px;
@@ -54,6 +59,8 @@
             color: #071952;
             margin-bottom: 25px;
         }
+
+        /* ================= BOOKING CARD ================= */
 
         .booking-card {
             background: white;
@@ -105,6 +112,8 @@
             color: #071952;
         }
 
+        /* ================= EMPTY ================= */
+
         .empty {
             background: white;
             padding: 60px 30px;
@@ -138,7 +147,23 @@
             font-weight: bold;
         }
 
+        /* ================= CLEAR BUTTON ================= */
+
+        .clear-btn {
+            margin-top: 20px;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #d00000;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
         @media(max-width:800px) {
+
             .sidebar {
                 width: 190px;
             }
@@ -150,11 +175,15 @@
             .details {
                 grid-template-columns: 1fr;
             }
+
         }
+
     </style>
 </head>
 
 <body>
+
+<!-- ================= SIDEBAR ================= -->
 
 <div class="sidebar">
 
@@ -197,34 +226,301 @@
 </div>
 
 
+<!-- ================= MAIN ================= -->
+
 <div class="main">
 
-    <h1>📋 My Bookings</h1>
+    <h1>
+        📋 My Bookings
+    </h1>
 
-    <div id="bookingList">
-
-        <div class="empty">
-
-            <div class="empty-icon">
-                🎫
-            </div>
-
-            <h2>No bookings yet</h2>
-
-            <p>
-                Your confirmed bus bookings will appear here.
-            </p>
-
-            <a href="booking.html" class="book-btn">
-                Book Your First Bus 🚌
-            </a>
-
-        </div>
-
-    </div>
+    <div id="bookingList"></div>
 
 </div>
 
+
+<script>
+
+/* =====================================================
+   LOAD BOOKINGS
+   ===================================================== */
+
+function loadBookings() {
+
+    const bookingList =
+        document.getElementById("bookingList");
+
+
+    const bookings =
+        JSON.parse(
+            localStorage.getItem("bookMyRouteBookings")
+        ) || [];
+
+
+    /* No bookings */
+
+    if (bookings.length === 0) {
+
+        bookingList.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🎫
+                </div>
+
+                <h2>
+                    No bookings yet
+                </h2>
+
+                <p>
+                    Your confirmed bus bookings will appear here.
+                </p>
+
+                <a
+                    href="booking.html"
+                    class="book-btn"
+                >
+                    Book Your First Bus 🚌
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    /* Clear old content */
+
+    bookingList.innerHTML = "";
+
+
+    /* Show bookings */
+
+    bookings.forEach(function(booking, index) {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "booking-card";
+
+
+        card.innerHTML = `
+
+            <div class="booking-header">
+
+                <h2>
+                    🚌 ${booking.busName}
+                </h2>
+
+                <span class="status">
+                    ✅ Confirmed
+                </span>
+
+            </div>
+
+
+            <div class="details">
+
+                <div class="detail">
+
+                    <span>
+                        Passenger
+                    </span>
+
+                    <strong>
+                        ${booking.name}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        Route
+                    </span>
+
+                    <strong>
+                        ${booking.from}
+                        →
+                        ${booking.to}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        Journey Date
+                    </span>
+
+                    <strong>
+                        ${booking.journeyDate}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        Bus Number
+                    </span>
+
+                    <strong>
+                        ${booking.busNumber}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        Bus Type
+                    </span>
+
+                    <strong>
+                        ${booking.busType}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        Seat
+                    </span>
+
+                    <strong>
+                        💺 ${booking.seat}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        Departure
+                    </span>
+
+                    <strong>
+                        🕐 ${booking.departure}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        Arrival
+                    </span>
+
+                    <strong>
+                        🕐 ${booking.arrival}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        Price
+                    </span>
+
+                    <strong>
+                        ₹${booking.price}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        Phone
+                    </span>
+
+                    <strong>
+                        ${booking.phone}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        Email
+                    </span>
+
+                    <strong>
+                        ${booking.email}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        bookingList.appendChild(card);
+
+    });
+
+
+    /* Clear bookings button */
+
+    const clearButton =
+        document.createElement("button");
+
+    clearButton.className =
+        "clear-btn";
+
+    clearButton.innerText =
+        "Clear Booking History";
+
+    clearButton.onclick =
+        clearBookings;
+
+
+    bookingList.appendChild(clearButton);
+
+}
+
+
+/* =====================================================
+   CLEAR BOOKINGS
+   ===================================================== */
+
+function clearBookings() {
+
+    localStorage.removeItem(
+        "bookMyRouteBookings"
+    );
+
+    loadBookings();
+
+}
+
+
+/* =====================================================
+   LOAD WHEN PAGE OPENS
+   ===================================================== */
+
+loadBookings();
+
+</script>
 
 </body>
 </html>
