@@ -4,6 +4,7 @@
     <title>BookMyRoute - Book a Bus</title>
 
     <style>
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -22,6 +23,7 @@
             background: linear-gradient(180deg,#071952,#088395);
             padding: 25px 15px;
             color: white;
+            z-index: 10;
         }
 
         .logo {
@@ -61,7 +63,7 @@
             padding: 30px;
             border-radius: 20px;
             box-shadow: 0 7px 25px rgba(0,0,0,.08);
-            max-width: 1000px;
+            max-width: 1100px;
         }
 
         .form-grid {
@@ -76,7 +78,8 @@
             margin-bottom: 7px;
         }
 
-        input, select {
+        input,
+        select {
             width: 100%;
             padding: 13px;
             border: 1px solid #ddd;
@@ -94,6 +97,8 @@
             margin-bottom: 15px;
             color: #088395;
         }
+
+        /* ================= BUS OPTIONS ================= */
 
         .bus-options {
             display: grid;
@@ -123,6 +128,41 @@
             color: #071952;
             margin-bottom: 8px;
         }
+
+        .bus-option p {
+            margin-top: 5px;
+        }
+
+        .bus-details {
+            margin-top: 10px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .bus-price {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #088395;
+        }
+
+        .no-buses {
+            padding: 20px;
+            border-radius: 12px;
+            background: #ffe5e5;
+            color: #c00000;
+            font-weight: bold;
+            text-align: center;
+            grid-column: 1 / -1;
+        }
+
+        .choose-message {
+            margin-top: 12px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* ================= SEATS ================= */
 
         .seats {
             display: grid;
@@ -172,6 +212,7 @@
         }
 
         @media(max-width:800px) {
+
             .sidebar {
                 width: 190px;
             }
@@ -185,10 +226,13 @@
                 grid-template-columns: 1fr;
             }
         }
+
     </style>
 </head>
 
 <body>
+
+<!-- ================= SIDEBAR ================= -->
 
 <div class="sidebar">
 
@@ -198,26 +242,40 @@
 
     <div class="menu">
 
-        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="dashboard.html">
+            🏠 Dashboard
+        </a>
 
         <a href="booking.html" class="active">
             🎫 Book a Bus
         </a>
 
-        <a href="bookings.html">📋 My Bookings</a>
+        <a href="bookings.html">
+            📋 My Bookings
+        </a>
 
-        <a href="account.html">👤 My Account</a>
+        <a href="account.html">
+            👤 My Account
+        </a>
 
-        <a href="support.html">📞 24/7 Support</a>
+        <a href="support.html">
+            📞 24/7 Support
+        </a>
 
-        <a href="about.html">ℹ️ About Us</a>
+        <a href="about.html">
+            ℹ️ About Us
+        </a>
 
-        <a href="login.html">🚪 Logout</a>
+        <a href="login.html">
+            🚪 Logout
+        </a>
 
     </div>
 
 </div>
 
+
+<!-- ================= MAIN ================= -->
 
 <div class="main">
 
@@ -225,156 +283,257 @@
 
     <div class="card">
 
-        <h2 class="section">Journey Details</h2>
+        <!-- ================= JOURNEY ================= -->
+
+        <h2 class="section">
+            Journey Details
+        </h2>
 
         <div class="form-grid">
 
             <div>
+
                 <label>From</label>
+
                 <input
                     type="text"
                     id="from"
                     placeholder="Enter starting point"
+                    oninput="filterBuses()"
                 >
+
             </div>
 
+
             <div>
+
                 <label>To</label>
+
                 <input
                     type="text"
                     id="to"
                     placeholder="Enter destination"
+                    oninput="filterBuses()"
                 >
+
             </div>
 
+
             <div>
+
                 <label>Journey Date</label>
+
                 <input
                     type="date"
                     id="journeyDate"
                     min=""
                 >
+
             </div>
 
         </div>
 
 
-        <h2 class="section">Choose Your Bus</h2>
+        <!-- ================= BUS SELECTION ================= -->
 
-        <div class="bus-options">
+        <h2 class="section">
+            Choose Your Bus
+        </h2>
 
-            <div class="bus-option"
-                 onclick="selectBus(this)">
-                <h3>🚌 Orange Travels</h3>
-                <p>Bus No: 101</p>
-                <p>Hyderabad → Bangalore</p>
-                <p>AC Sleeper</p>
-            </div>
+        <p class="choose-message" id="chooseMessage">
+            Enter From and To cities to see available buses.
+        </p>
 
-            <div class="bus-option"
-                 onclick="selectBus(this)">
-                <h3>🚌 VRL Travels</h3>
-                <p>Bus No: 102</p>
-                <p>Chennai → Hyderabad</p>
-                <p>AC Seater</p>
-            </div>
-
-            <div class="bus-option"
-                 onclick="selectBus(this)">
-                <h3>🚌 SRS Travels</h3>
-                <p>Bus No: 103</p>
-                <p>Bangalore → Chennai</p>
-                <p>Non-AC Seater</p>
-            </div>
+        <div
+            class="bus-options"
+            id="busOptions"
+        >
 
         </div>
 
 
-        <h2 class="section">Passenger Details</h2>
+        <!-- ================= PASSENGER ================= -->
+
+        <h2 class="section">
+            Passenger Details
+        </h2>
 
         <div class="form-grid">
 
             <div>
+
                 <label>Name</label>
+
                 <input
                     type="text"
                     id="name"
                     placeholder="Passenger name"
                 >
+
             </div>
 
+
             <div>
+
                 <label>Age</label>
+
                 <input
                     type="number"
                     id="age"
                     placeholder="Age"
                 >
+
             </div>
 
+
             <div>
+
                 <label>Gender</label>
+
                 <select id="gender">
-                    <option value="">Select Gender</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Other</option>
+
+                    <option value="">
+                        Select Gender
+                    </option>
+
+                    <option>
+                        Male
+                    </option>
+
+                    <option>
+                        Female
+                    </option>
+
+                    <option>
+                        Other
+                    </option>
+
                 </select>
+
             </div>
 
+
             <div>
+
                 <label>Phone</label>
+
                 <input
                     type="tel"
                     id="phone"
                     placeholder="Phone number"
                 >
+
             </div>
 
+
             <div>
+
                 <label>Email</label>
+
                 <input
                     type="email"
                     id="email"
                     placeholder="Email address"
                 >
+
             </div>
 
         </div>
 
 
-        <h2 class="section">Choose Your Seat</h2>
+        <!-- ================= SEATS ================= -->
+
+        <h2 class="section">
+            Choose Your Seat
+        </h2>
 
         <div class="seats">
 
-            <button class="seat" onclick="selectSeat(this)">A1</button>
-            <button class="seat" onclick="selectSeat(this)">A2</button>
-            <button class="seat" onclick="selectSeat(this)">B1</button>
-            <button class="seat" onclick="selectSeat(this)">B2</button>
+            <button class="seat"
+                    onclick="selectSeat(this)">
+                A1
+            </button>
 
-            <button class="seat" onclick="selectSeat(this)">A3</button>
-            <button class="seat" onclick="selectSeat(this)">A4</button>
-            <button class="seat" onclick="selectSeat(this)">B3</button>
-            <button class="seat" onclick="selectSeat(this)">B4</button>
+            <button class="seat"
+                    onclick="selectSeat(this)">
+                A2
+            </button>
 
-            <button class="seat" onclick="selectSeat(this)">C1</button>
-            <button class="seat" onclick="selectSeat(this)">C2</button>
-            <button class="seat" onclick="selectSeat(this)">D1</button>
-            <button class="seat" onclick="selectSeat(this)">D2</button>
+            <button class="seat"
+                    onclick="selectSeat(this)">
+                B1
+            </button>
+
+            <button class="seat"
+                    onclick="selectSeat(this)">
+                B2
+            </button>
+
+
+            <button class="seat"
+                    onclick="selectSeat(this)">
+                A3
+            </button>
+
+            <button class="seat"
+                    onclick="selectSeat(this)">
+                A4
+            </button>
+
+            <button class="seat"
+                    onclick="selectSeat(this)">
+                B3
+            </button>
+
+            <button class="seat"
+                    onclick="selectSeat(this)">
+                B4
+            </button>
+
+
+            <button class="seat"
+                    onclick="selectSeat(this)">
+                C1
+            </button>
+
+            <button class="seat"
+                    onclick="selectSeat(this)">
+                C2
+            </button>
+
+            <button class="seat"
+                    onclick="selectSeat(this)">
+                D1
+            </button>
+
+            <button class="seat"
+                    onclick="selectSeat(this)">
+                D2
+            </button>
 
         </div>
 
+
         <p style="margin-top:15px;">
+
             Selected Seat:
-            <strong id="selectedSeat">None</strong>
+            <strong id="selectedSeat">
+                None
+            </strong>
+
         </p>
 
+
+        <!-- ================= BOOK ================= -->
 
         <button
             class="book-btn"
             onclick="bookTicket()">
+
             🎫 Confirm Booking
+
         </button>
+
 
         <p id="message"></p>
 
@@ -385,136 +544,564 @@
 
 <script>
 
+/* =====================================================
+   BUS DATABASE
+   Same routes used on the Dashboard
+   ===================================================== */
+
+const buses = [
+
+    {
+        busNumber: 201,
+        from: "bhimavaram",
+        to: "visakhapatnam",
+        name: "Sri Krishna Travels",
+        departure: "06:30 AM",
+        arrival: "12:30 PM",
+        type: "AC Seater",
+        seats: 32,
+        price: 550
+    },
+
+    {
+        busNumber: 202,
+        from: "bhimavaram",
+        to: "visakhapatnam",
+        name: "APSRTC Super Luxury",
+        departure: "09:00 AM",
+        arrival: "03:15 PM",
+        type: "Non-AC Seater",
+        seats: 41,
+        price: 420
+    },
+
+    {
+        busNumber: 203,
+        from: "bhimavaram",
+        to: "visakhapatnam",
+        name: "Coastal Express",
+        departure: "07:45 PM",
+        arrival: "01:30 AM",
+        type: "AC Sleeper",
+        seats: 20,
+        price: 750
+    },
+
+
+    {
+        busNumber: 204,
+        from: "bhimavaram",
+        to: "mandapeta",
+        name: "Godavari Travels",
+        departure: "07:00 AM",
+        arrival: "09:00 AM",
+        type: "AC Seater",
+        seats: 35,
+        price: 250
+    },
+
+    {
+        busNumber: 205,
+        from: "bhimavaram",
+        to: "mandapeta",
+        name: "Konaseema Express",
+        departure: "02:30 PM",
+        arrival: "04:30 PM",
+        type: "Non-AC Seater",
+        seats: 38,
+        price: 180
+    },
+
+
+    {
+        busNumber: 206,
+        from: "bhimavaram",
+        to: "hyderabad",
+        name: "Orange Travels",
+        departure: "08:30 PM",
+        arrival: "06:00 AM",
+        type: "AC Sleeper",
+        seats: 25,
+        price: 950
+    },
+
+
+    {
+        busNumber: 101,
+        from: "hyderabad",
+        to: "bangalore",
+        name: "Orange Travels",
+        departure: "09:30 PM",
+        arrival: "07:00 AM",
+        type: "AC Sleeper",
+        seats: 40,
+        price: 1200
+    },
+
+
+    {
+        busNumber: 102,
+        from: "chennai",
+        to: "hyderabad",
+        name: "VRL Travels",
+        departure: "08:00 PM",
+        arrival: "06:30 AM",
+        type: "AC Seater",
+        seats: 45,
+        price: 1050
+    },
+
+
+    {
+        busNumber: 103,
+        from: "bangalore",
+        to: "chennai",
+        name: "SRS Travels",
+        departure: "10:00 PM",
+        arrival: "05:30 AM",
+        type: "Non-AC Seater",
+        seats: 35,
+        price: 700
+    }
+
+];
+
+
+/* =====================================================
+   SELECTED BUS
+   ===================================================== */
+
+let selectedBus = null;
+
+
+/* =====================================================
+   SELECTED SEAT
+   ===================================================== */
+
 let selectedSeat = "";
 
-function selectBus(element) {
 
-    document.querySelectorAll(".bus-option")
-        .forEach(bus => bus.classList.remove("selected"));
+/* =====================================================
+   FILTER BUSES WHEN FROM / TO IS ENTERED
+   ===================================================== */
 
-    element.classList.add("selected");
-}
+function filterBuses() {
 
+    const fromInput =
+        document.getElementById("from")
+        .value
+        .trim()
+        .toLowerCase();
 
-function selectSeat(element) {
+    const toInput =
+        document.getElementById("to")
+        .value
+        .trim()
+        .toLowerCase();
 
-    document.querySelectorAll(".seat")
-        .forEach(seat => seat.classList.remove("selected"));
+    const container =
+        document.getElementById("busOptions");
 
-    element.classList.add("selected");
-
-    selectedSeat = element.innerText;
-
-    document.getElementById("selectedSeat").innerText =
-        selectedSeat;
-}
-
-
-/*
-    Keep today's date as the minimum journey date.
-*/
-
-const today = new Date();
-
-const yyyy = today.getFullYear();
-
-const mm = String(today.getMonth() + 1)
-    .padStart(2,"0");
-
-const dd = String(today.getDate())
-    .padStart(2,"0");
-
-document.getElementById("journeyDate").min =
-    `${yyyy}-${mm}-${dd}`;
+    const message =
+        document.getElementById("chooseMessage");
 
 
-/*
-    Existing booking system.
-    Do NOT change script.js.
-*/
+    /* Clear old buses */
 
-function bookTicket() {
+    container.innerHTML = "";
 
-    const name =
-        document.getElementById("name").value;
-
-    const age =
-        document.getElementById("age").value;
-
-    const gender =
-        document.getElementById("gender").value;
-
-    const phone =
-        document.getElementById("phone").value;
-
-    const email =
-        document.getElementById("email").value;
-
-    const from =
-        document.getElementById("from").value;
-
-    const to =
-        document.getElementById("to").value;
-
-    const journeyDate =
-        document.getElementById("journeyDate").value;
+    selectedBus = null;
 
 
-    if (!name || !age || !gender ||
-        !phone || !email ||
-        !from || !to || !journeyDate ||
-        !selectedSeat) {
+    /* Nothing entered yet */
 
-        document.getElementById("message").innerText =
-            "⚠️ Please fill all details and select a seat.";
+    if (!fromInput && !toInput) {
+
+        message.innerText =
+            "Enter From and To cities to see available buses.";
 
         return;
     }
 
 
-    /*
-       Your existing server endpoint.
-       This is the same /book endpoint.
-    */
+    /* Only one field entered */
+
+    if (!fromInput || !toInput) {
+
+        message.innerText =
+            "Enter both From and To cities.";
+
+        return;
+    }
+
+
+    /* Find exact matching route */
+
+    const matchingBuses =
+        buses.filter(function(bus) {
+
+            return bus.from === fromInput &&
+                   bus.to === toInput;
+
+        });
+
+
+    /* No route */
+
+    if (matchingBuses.length === 0) {
+
+        message.innerText =
+            "❌ No buses available for " +
+            fromInput +
+            " → " +
+            toInput;
+
+        const noBus =
+            document.createElement("div");
+
+        noBus.className = "no-buses";
+
+        noBus.innerText =
+            "🚌 No buses available for this route.";
+
+        container.appendChild(noBus);
+
+        return;
+    }
+
+
+    /* Buses found */
+
+    message.innerText =
+        "✅ " +
+        matchingBuses.length +
+        " bus(es) available for " +
+        fromInput +
+        " → " +
+        toInput;
+
+
+    /* Create only matching bus cards */
+
+    matchingBuses.forEach(function(bus) {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "bus-option";
+
+
+        card.onclick =
+            function() {
+
+                selectBus(card, bus);
+
+            };
+
+
+        card.innerHTML = `
+
+            <h3>
+                🚌 ${bus.name}
+            </h3>
+
+            <p>
+                <strong>Bus No:</strong>
+                ${bus.busNumber}
+            </p>
+
+            <p>
+                ${bus.from} → ${bus.to}
+            </p>
+
+            <div class="bus-details">
+
+                🕐 ${bus.departure}
+                →
+                ${bus.arrival}
+
+                <br>
+
+                🪑 ${bus.seats} seats available
+
+                <br>
+
+                ${bus.type}
+
+            </div>
+
+            <div class="bus-price">
+                ₹${bus.price}
+            </div>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/* =====================================================
+   SELECT BUS
+   ===================================================== */
+
+function selectBus(element, bus) {
+
+    document
+        .querySelectorAll(".bus-option")
+        .forEach(function(item) {
+
+            item.classList.remove("selected");
+
+        });
+
+
+    element.classList.add("selected");
+
+
+    selectedBus = bus;
+
+
+    document.getElementById("message").innerText =
+        "🚌 " +
+        bus.name +
+        " selected.";
+
+}
+
+
+/* =====================================================
+   SELECT SEAT
+   ===================================================== */
+
+function selectSeat(element) {
+
+    document
+        .querySelectorAll(".seat")
+        .forEach(function(seat) {
+
+            seat.classList.remove("selected");
+
+        });
+
+
+    element.classList.add("selected");
+
+
+    selectedSeat =
+        element.innerText;
+
+
+    document.getElementById("selectedSeat")
+        .innerText =
+        selectedSeat;
+
+}
+
+
+/* =====================================================
+   PREVENT PAST DATES
+   ===================================================== */
+
+const today =
+    new Date();
+
+
+const yyyy =
+    today.getFullYear();
+
+
+const mm =
+    String(today.getMonth() + 1)
+    .padStart(2,"0");
+
+
+const dd =
+    String(today.getDate())
+    .padStart(2,"0");
+
+
+document.getElementById("journeyDate").min =
+    `${yyyy}-${mm}-${dd}`;
+
+
+/* =====================================================
+   READ ROUTE FROM DASHBOARD URL
+   ===================================================== */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const urlFrom =
+    params.get("from");
+
+const urlTo =
+    params.get("to");
+
+const urlDate =
+    params.get("date");
+
+
+if (urlFrom) {
+
+    document.getElementById("from").value =
+        urlFrom;
+
+}
+
+
+if (urlTo) {
+
+    document.getElementById("to").value =
+        urlTo;
+
+}
+
+
+if (urlDate) {
+
+    document.getElementById("journeyDate").value =
+        urlDate;
+
+}
+
+
+/* Automatically show matching buses */
+
+if (urlFrom && urlTo) {
+
+    filterBuses();
+
+}
+
+
+/* =====================================================
+   BOOK TICKET
+   ===================================================== */
+
+function bookTicket() {
+
+    const name =
+        document.getElementById("name").value.trim();
+
+    const age =
+        document.getElementById("age").value.trim();
+
+    const gender =
+        document.getElementById("gender").value;
+
+    const phone =
+        document.getElementById("phone").value.trim();
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const from =
+        document.getElementById("from").value.trim();
+
+    const to =
+        document.getElementById("to").value.trim();
+
+    const journeyDate =
+        document.getElementById("journeyDate").value;
+
+
+    /* Check all details */
+
+    if (
+        !name ||
+        !age ||
+        !gender ||
+        !phone ||
+        !email ||
+        !from ||
+        !to ||
+        !journeyDate ||
+        !selectedBus ||
+        !selectedSeat
+    ) {
+
+        document.getElementById("message").innerText =
+            "⚠️ Please fill all details, choose a bus and select a seat.";
+
+        return;
+
+    }
+
+
+    /* =================================================
+       SEND BOOKING TO EXISTING JAVA SERVER
+       ================================================= */
 
     fetch("/book", {
 
         method: "POST",
 
         headers: {
-            "Content-Type": "application/json"
+
+            "Content-Type":
+                "application/json"
+
         },
 
         body: JSON.stringify({
 
             name: name,
+
             age: age,
+
             gender: gender,
+
             phone: phone,
+
             email: email,
+
             source: from,
+
             destination: to,
+
             journeyDate: journeyDate,
-            seat: selectedSeat
+
+            seat: selectedSeat,
+
+            busNumber:
+                selectedBus.busNumber
 
         })
 
     })
 
-    .then(response => response.text())
 
-    .then(data => {
+    .then(function(response) {
+
+        return response.text();
+
+    })
+
+
+    .then(function(data) {
+
+        console.log(data);
+
 
         document.getElementById("message").innerText =
             "✅ Booking submitted successfully!";
 
-        console.log(data);
 
     })
 
-    .catch(error => {
+
+    .catch(function(error) {
 
         console.error(error);
+
 
         document.getElementById("message").innerText =
             "❌ Booking failed. Please try again.";
