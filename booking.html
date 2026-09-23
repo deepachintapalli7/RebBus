@@ -1087,10 +1087,14 @@ function bookTicket() {
 
     })
 
-
 .then(function(data) {
 
     console.log(data);
+
+
+    /* ============================
+       SAVE BOOKING
+       ============================ */
 
     const booking = {
 
@@ -1131,8 +1135,65 @@ function bookTicket() {
     );
 
 
-    document.getElementById("message").innerText =
-        "✅ Booking submitted successfully!";
+    /* ============================
+       SEND CONFIRMATION EMAIL
+       ============================ */
+
+    emailjs.send(
+        "service_g3kqc7k",
+        "template_skx40tc",
+        {
+
+            to_email: email,
+
+            name: name,
+
+            bus_name: selectedBus.name,
+
+            bus_number: selectedBus.busNumber,
+
+            from: from,
+
+            to: to,
+
+            journey_date: journeyDate,
+
+            seat: selectedSeat,
+
+            bus_type: selectedBus.type,
+
+            departure: selectedBus.departure,
+
+            arrival: selectedBus.arrival,
+
+            price: selectedBus.price
+
+        }
+    )
+
+    .then(function() {
+
+        console.log(
+            "Booking confirmation email sent successfully."
+        );
+
+        document.getElementById("message").innerText =
+            "✅ Booking confirmed! Confirmation email sent to " +
+            email;
+
+    })
+
+    .catch(function(error) {
+
+        console.error(
+            "Email sending failed:",
+            error
+        );
+
+        document.getElementById("message").innerText =
+            "✅ Booking confirmed! Email could not be sent.";
+
+    });
 
 })
 
