@@ -4,6 +4,7 @@
     <title>BookMyRoute - My Account</title>
 
     <style>
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -14,6 +15,8 @@
         body {
             background: #f4f7fb;
         }
+
+        /* ================= SIDEBAR ================= */
 
         .sidebar {
             position: fixed;
@@ -45,6 +48,8 @@
             background: rgba(255,255,255,.2);
         }
 
+        /* ================= MAIN ================= */
+
         .main {
             margin-left: 250px;
             padding: 35px;
@@ -54,6 +59,8 @@
             color: #071952;
             margin-bottom: 25px;
         }
+
+        /* ================= ACCOUNT CARD ================= */
 
         .account-card {
             max-width: 850px;
@@ -91,6 +98,8 @@
             color: #777;
         }
 
+        /* ================= DETAILS ================= */
+
         .details {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -117,6 +126,8 @@
             border: 1px solid #ddd;
             border-radius: 8px;
         }
+
+        /* ================= BUTTONS ================= */
 
         .buttons {
             margin-top: 30px;
@@ -153,6 +164,8 @@
             font-weight: bold;
         }
 
+        /* ================= RESPONSIVE ================= */
+
         @media(max-width:800px) {
 
             .sidebar {
@@ -166,11 +179,15 @@
             .details {
                 grid-template-columns: 1fr;
             }
+
         }
+
     </style>
 </head>
 
 <body>
+
+<!-- ================= SIDEBAR ================= -->
 
 <div class="sidebar">
 
@@ -180,32 +197,50 @@
 
     <div class="menu">
 
-        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="dashboard.html">
+            🏠 Dashboard
+        </a>
 
-        <a href="booking.html">🎫 Book a Bus</a>
+        <a href="booking.html">
+            🎫 Book a Bus
+        </a>
 
-        <a href="bookings.html">📋 My Bookings</a>
+        <a href="bookings.html">
+            📋 My Bookings
+        </a>
 
         <a href="account.html" class="active">
             👤 My Account
         </a>
 
-        <a href="support.html">📞 24/7 Support</a>
+        <a href="support.html">
+            📞 24/7 Support
+        </a>
 
-        <a href="about.html">ℹ️ About Us</a>
+        <a href="about.html">
+            ℹ️ About Us
+        </a>
 
-        <a href="login.html">🚪 Logout</a>
+        <a href="login.html">
+            🚪 Logout
+        </a>
 
     </div>
 
 </div>
 
 
+<!-- ================= MAIN ================= -->
+
 <div class="main">
 
-    <h1>👤 My Account</h1>
+    <h1>
+        👤 My Account
+    </h1>
 
     <div class="account-card">
+
+        <!-- ================= PROFILE TOP ================= -->
 
         <div class="profile-top">
 
@@ -214,6 +249,7 @@
             </div>
 
             <div>
+
                 <h2 id="displayName">
                     Traveler
                 </h2>
@@ -221,20 +257,26 @@
                 <p>
                     BookMyRoute Member
                 </p>
+
             </div>
 
         </div>
 
+
+        <!-- ================= DETAILS ================= -->
 
         <div class="details">
 
             <div class="detail">
 
-                <label>Full Name</label>
+                <label>
+                    Full Name
+                </label>
 
                 <input
                     id="name"
-                    value="Traveler"
+                    value=""
+                    placeholder="Enter your full name"
                     disabled
                 >
 
@@ -243,11 +285,14 @@
 
             <div class="detail">
 
-                <label>Gmail</label>
+                <label>
+                    Gmail
+                </label>
 
                 <input
                     id="email"
-                    value="Not added"
+                    value=""
+                    placeholder="Enter your Gmail"
                     disabled
                 >
 
@@ -256,11 +301,14 @@
 
             <div class="detail">
 
-                <label>Phone</label>
+                <label>
+                    Phone
+                </label>
 
                 <input
                     id="phone"
-                    value="Not added"
+                    value=""
+                    placeholder="Enter your phone number"
                     disabled
                 >
 
@@ -269,11 +317,14 @@
 
             <div class="detail">
 
-                <label>Username</label>
+                <label>
+                    Username
+                </label>
 
                 <input
                     id="username"
-                    value="Traveler"
+                    value=""
+                    placeholder="Enter your username"
                     disabled
                 >
 
@@ -281,6 +332,8 @@
 
         </div>
 
+
+        <!-- ================= BUTTONS ================= -->
 
         <div class="buttons">
 
@@ -288,24 +341,33 @@
                 class="edit-btn"
                 id="editBtn"
                 onclick="editProfile()">
+
                 ✏️ Edit Profile
+
             </button>
+
 
             <button
                 class="save-btn"
                 id="saveBtn"
                 onclick="saveProfile()">
+
                 💾 Save Changes
+
             </button>
+
 
             <button
                 class="cancel-btn"
                 id="cancelBtn"
                 onclick="cancelEdit()">
+
                 Cancel
+
             </button>
 
         </div>
+
 
         <p id="message"></p>
 
@@ -316,93 +378,253 @@
 
 <script>
 
-function editProfile() {
+/* =====================================================
+   LOAD SAVED PROFILE
+   ===================================================== */
 
-    document
-        .querySelectorAll(".detail input")
-        .forEach(input => {
-            input.disabled = false;
-        });
+function loadProfile() {
 
-    document.getElementById("editBtn")
-        .style.display = "none";
-
-    document.getElementById("saveBtn")
-        .style.display = "block";
-
-    document.getElementById("cancelBtn")
-        .style.display = "block";
-}
+    const savedProfile =
+        JSON.parse(
+            localStorage.getItem("bookMyRouteProfile")
+        );
 
 
-function saveProfile() {
+    /* No profile saved yet */
 
-    const name =
-        document.getElementById("name").value;
+    if (!savedProfile) {
 
-    const email =
-        document.getElementById("email").value;
+        document.getElementById("name").value =
+            "";
 
-    const phone =
-        document.getElementById("phone").value;
+        document.getElementById("email").value =
+            "";
 
-    const username =
-        document.getElementById("username").value;
+        document.getElementById("phone").value =
+            "";
 
+        document.getElementById("username").value =
+            "";
 
-    if (!name || !email || !phone || !username) {
-
-        document.getElementById("message").innerText =
-            "❌ Please fill all fields.";
+        document.getElementById("displayName").innerText =
+            "Traveler";
 
         return;
     }
 
 
+    /* Put saved data into fields */
+
+    document.getElementById("name").value =
+        savedProfile.name || "";
+
+    document.getElementById("email").value =
+        savedProfile.email || "";
+
+    document.getElementById("phone").value =
+        savedProfile.phone || "";
+
+    document.getElementById("username").value =
+        savedProfile.username || "";
+
+
+    /* Show name at top */
+
+    document.getElementById("displayName").innerText =
+        savedProfile.name || "Traveler";
+
+}
+
+
+/* =====================================================
+   EDIT PROFILE
+   ===================================================== */
+
+function editProfile() {
+
+    document
+        .querySelectorAll(".detail input")
+        .forEach(function(input) {
+
+            input.disabled = false;
+
+        });
+
+
+    document.getElementById("editBtn")
+        .style.display = "none";
+
+
+    document.getElementById("saveBtn")
+        .style.display = "block";
+
+
+    document.getElementById("cancelBtn")
+        .style.display = "block";
+
+
+    document.getElementById("message")
+        .innerText = "";
+
+}
+
+
+/* =====================================================
+   SAVE PROFILE
+   ===================================================== */
+
+function saveProfile() {
+
+    const name =
+        document.getElementById("name")
+        .value
+        .trim();
+
+
+    const email =
+        document.getElementById("email")
+        .value
+        .trim();
+
+
+    const phone =
+        document.getElementById("phone")
+        .value
+        .trim();
+
+
+    const username =
+        document.getElementById("username")
+        .value
+        .trim();
+
+
+    /* Check fields */
+
+    if (
+        !name ||
+        !email ||
+        !phone ||
+        !username
+    ) {
+
+        document.getElementById("message")
+            .innerText =
+            "❌ Please fill all fields.";
+
+        return;
+
+    }
+
+
+    /* Create profile */
+
+    const profile = {
+
+        name: name,
+
+        email: email,
+
+        phone: phone,
+
+        username: username
+
+    };
+
+
+    /* SAVE PROFILE */
+
+    localStorage.setItem(
+        "bookMyRouteProfile",
+        JSON.stringify(profile)
+    );
+
+
+    /* Update name at top */
+
     document.getElementById("displayName")
         .innerText = name;
 
+
+    /* Disable fields */
+
     document
         .querySelectorAll(".detail input")
-        .forEach(input => {
+        .forEach(function(input) {
+
             input.disabled = true;
+
         });
+
+
+    /* Buttons */
 
     document.getElementById("editBtn")
         .style.display = "block";
 
+
     document.getElementById("saveBtn")
         .style.display = "none";
+
 
     document.getElementById("cancelBtn")
         .style.display = "none";
 
-    document.getElementById("message").innerText =
-        "✅ Profile updated successfully.";
+
+    /* Success */
+
+    document.getElementById("message")
+        .innerText =
+        "✅ Profile saved successfully.";
 
 }
 
+
+/* =====================================================
+   CANCEL EDIT
+   ===================================================== */
 
 function cancelEdit() {
 
+    /* Reload saved information */
+
+    loadProfile();
+
+
+    /* Disable fields */
+
     document
         .querySelectorAll(".detail input")
-        .forEach(input => {
+        .forEach(function(input) {
+
             input.disabled = true;
+
         });
+
 
     document.getElementById("editBtn")
         .style.display = "block";
 
+
     document.getElementById("saveBtn")
         .style.display = "none";
+
 
     document.getElementById("cancelBtn")
         .style.display = "none";
 
-    document.getElementById("message").innerText =
-        "";
+
+    document.getElementById("message")
+        .innerText = "";
+
 }
+
+
+/* =====================================================
+   LOAD PROFILE WHEN PAGE OPENS
+   ===================================================== */
+
+loadProfile();
 
 </script>
 
