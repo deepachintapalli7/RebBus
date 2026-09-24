@@ -34,7 +34,7 @@ label{display:block;font-weight:bold;margin-bottom:7px}input,select{width:100%;p
 .info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.info-card{background:#f8fbff;border-radius:16px;padding:18px;border:1px solid #e4e8ef}.info-card h3{color:#071952;margin-bottom:10px}.info-card p{line-height:1.6;color:#555;margin:5px 0}
 .track{background:#071952;color:white;border-radius:16px;padding:18px}.trackbar{height:10px;background:#34456e;border-radius:10px;overflow:hidden;margin:12px 0}.trackbar span{display:block;height:100%;width:62%;background:#37d4a1;border-radius:10px}
 .offer{border-left:5px solid #ff8a00;background:#fff8ed;padding:14px;border-radius:10px;margin-top:12px}.discount{font-weight:bold;color:#d65a00}
-.book-btn{margin-top:30px;padding:15px 35px;border:none;border-radius:10px;background:linear-gradient(90deg,#071952,#088395);color:white;font-size:17px;font-weight:bold;cursor:pointer}.book-btn:hover{transform:scale(1.02)}
+.book-btn{margin-top:30px;padding:15px 35px;border:none;border-radius:10px;background:linear-gradient(90deg,#071952,#088395);color:white;font-size:17px;font-weight:bold;cursor:pointer}.book-btn:hover{transform:scale(1.02)}.book-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
 #message{margin-top:20px;font-weight:bold}
 @media(max-width:1050px){.seat-wrap{grid-template-columns:1fr}.bus-options{grid-template-columns:1fr 1fr}}
 @media(max-width:800px){.sidebar{width:190px}.main{margin-left:190px;padding:20px}.form-grid,.bus-options,.info-grid{grid-template-columns:1fr}.seat-wrap{grid-template-columns:1fr}}
@@ -112,7 +112,7 @@ label{display:block;font-weight:bold;margin-bottom:7px}input,select{width:100%;p
 <div class="notice">👨 A male passenger cannot select a Female Only adjacent seat.</div>
 <div class="notice">👩 Female passengers can see whether a booked seat is occupied by a male or female passenger.</div>
 <p style="margin-top:12px">Selected Seat: <b id="selectedSeat">None</b></p>
-<p style="margin-top:8px">Fare: <b id="selectedFare">Select a bus and seat</b></p>
+<p style="margin-top:8px">Fare: <b id="selectedFare">Select a bus and seat(s)</b></p>
 </div>
 </div>
 <button class="book-btn" onclick="bookTicket()">🎫 Confirm Booking</button>
@@ -157,7 +157,7 @@ const buses=[
 {busNumber:103,from:"bangalore",to:"chennai",name:"SRS Travels",departure:"10:00 PM",arrival:"05:30 AM",type:"Non-AC Seater",seats:35,price:700,boarding:"Majestic Bangalore",dropping:"Koyambedu Chennai",driver:"Ajay • 10 years experience"}
 ];
 
-let selectedBus=null,selectedSeat="";
+let selectedBus=null,selectedSeats=[];
 const cities=[...new Set(buses.flatMap(b=>[b.from,b.to]))];
 
 function showCitySuggestions(id){
@@ -172,7 +172,7 @@ document.addEventListener("click",e=>{if(!e.target.closest(".autocomplete"))docu
 
 function filterBuses(){
 const f=document.getElementById("from").value.trim().toLowerCase(),t=document.getElementById("to").value.trim().toLowerCase(),box=document.getElementById("busOptions"),msg=document.getElementById("chooseMessage");
-box.innerHTML="";selectedBus=null;selectedSeat="";document.getElementById("selectedSeat").innerText="None";renderSeats();
+box.innerHTML="";selectedBus=null;selectedSeats=[];document.getElementById("selectedSeat").innerText="None";updateFare();renderSeats();
 if(!f&&!t){msg.innerText="Enter From and To cities to see available buses.";return}
 if(!f||!t){msg.innerText="Enter both From and To cities.";return}
 const matches=buses.filter(b=>b.from===f&&b.to===t);
@@ -186,7 +186,7 @@ box.appendChild(card);
 }
 
 function selectBus(el,bus){
-document.querySelectorAll(".bus-option").forEach(x=>x.classList.remove("selected"));el.classList.add("selected");selectedBus=bus;selectedSeat="";
+document.querySelectorAll(".bus-option").forEach(x=>x.classList.remove("selected"));el.classList.add("selected");selectedBus=bus;selectedSeats=[];document.getElementById("selectedSeat").innerText="None";updateFare();
 document.getElementById("message").innerText="🚌 "+bus.name+" selected.";
 document.getElementById("routeInfo").innerText=bus.from+" → "+bus.to+" • "+bus.departure+" → "+bus.arrival;
 document.getElementById("pointsInfo").innerText="Boarding: "+bus.boarding+" | Dropping: "+bus.dropping;
@@ -241,17 +241,33 @@ if(!selectedBus){document.getElementById("message").innerText="⚠️ Select a b
 if(el.disabled)return;
 const gender=document.getElementById("gender").value;
 if(!gender){document.getElementById("message").innerText="⚠️ Select passenger gender first.";return}
-document.querySelectorAll(".seat").forEach(x=>x.classList.remove("selected"));
-el.classList.add("selected");selectedSeat=id;
-document.getElementById("selectedSeat").innerText=id;updateFare();
+if(selectedSeats.includes(id)){
+    selectedSeats=selectedSeats.filter(s=>s!==id);
+    el.classList.remove("selected");
+}else{
+    selectedSeats.push(id);
+    el.classList.add("selected");
+}
+document.getElementById("selectedSeat").innerText=selectedSeats.length?selectedSeats.join(", "):"None";
+updateFare();
 }
 
 function updateFare(){
 const category=document.getElementById("category").value,discount=category==="senior"?.40:category==="child"?.50:0;
 if(!selectedBus){document.getElementById("fareOffer").innerText=category==="senior"?"Senior citizen: 40% OFF":category==="child"?"Child: 50% OFF":"General citizen fare: no discount.";document.getElementById("selectedFare").innerText="Select a bus and seat";return}
-const fare=Math.round(selectedBus.price*(1-discount));
-document.getElementById("fareOffer").innerHTML=category==="senior"?'<span class="discount">Senior citizen: 40% OFF</span> — ₹'+fare+' final fare.':category==="child"?'<span class="discount">Child: 50% OFF</span> — ₹'+fare+' final fare.':"General citizen fare: ₹"+fare+".";
-document.getElementById("selectedFare").innerText="₹"+fare;
+const perSeatFare=Math.round(selectedBus.price*(1-discount));
+const seatCount=selectedSeats.length;
+const totalFare=perSeatFare*seatCount;
+document.getElementById("fareOffer").innerHTML=
+    category==="senior"
+    ? '<span class="discount">Senior citizen: 40% OFF</span> — ₹'+perSeatFare+' per seat.'
+    : category==="child"
+    ? '<span class="discount">Child: 50% OFF</span> — ₹'+perSeatFare+' per seat.'
+    : "General citizen fare: ₹"+perSeatFare+" per seat.";
+document.getElementById("selectedFare").innerText=
+    seatCount
+    ? "₹"+perSeatFare+" × "+seatCount+" seat(s) = ₹"+totalFare+" Total"
+    : "Select a seat";
 }
 document.getElementById("category").addEventListener("change",updateFare);
 function refreshSeatRules(){renderSeats()}
@@ -263,28 +279,144 @@ clearInterval(window.trackTimer);
 window.trackTimer=setInterval(()=>{progress=(progress+1)%101;document.getElementById("trackingProgress").style.width=progress+"%";document.getElementById("trackingEta").innerText="ETA: "+Math.max(1,Math.round((100-progress)/12))+" hours • Demo location updates";},1200);
 }
 
+function seatToNumber(seat){
+    const letter=seat.charAt(0).toUpperCase();
+    const row=parseInt(seat.substring(1),10);
+    const column={A:0,B:1,C:2,D:3}[letter];
+    return ((row-1)*4)+column+1;
+}
+
 function bookTicket(){
 const name=document.getElementById("name").value.trim(),age=document.getElementById("age").value.trim(),gender=document.getElementById("gender").value,phone=document.getElementById("phone").value.trim(),email=document.getElementById("email").value.trim(),from=document.getElementById("from").value.trim(),to=document.getElementById("to").value.trim(),journeyDate=document.getElementById("journeyDate").value;
-if(!name||!age||!gender||!phone||!email||!from||!to||!journeyDate||!selectedBus||!selectedSeat){document.getElementById("message").innerText="⚠️ Please fill all details, choose a bus and select a seat.";return}
+if(!name||!age||!gender||!phone||!email||!from||!to||!journeyDate||!selectedBus||!selectedSeats.length){
+    document.getElementById("message").innerText="⚠️ Please fill all details, choose a bus and select at least one seat.";
+    return;
+}
+
 const bookings=getBookings();
-if(bookings.some(x=>x.key===seatKey()&&x.seat===selectedSeat)){document.getElementById("message").innerText="❌ This seat has just been booked by another passenger. Please choose another seat.";renderSeats();return}
-const category=document.getElementById("category").value,discount=category==="senior"?.40:category==="child"?.50:0,finalPrice=Math.round(selectedBus.price*(1-discount));
-const booking={key:seatKey(),seat:selectedSeat,gender:gender,name:name,from:from,to:to,journeyDate:journeyDate,busName:selectedBus.name,busNumber:selectedBus.busNumber,busType:selectedBus.type,departure:selectedBus.departure,arrival:selectedBus.arrival,price:finalPrice,phone:phone,email:email};
-fetch("/book",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,age,gender,phone,email,source:from,destination:to,journeyDate,seat:selectedSeat,busNumber:selectedBus.busNumber})})
-.then(r=>r.text()).then(data=>{
-const latest=getBookings();
-if(!latest.some(x=>x.key===booking.key&&x.seat===booking.seat)){latest.push(booking);localStorage.setItem("bookMyRouteSeatBookings",JSON.stringify(latest))}
-const existing=JSON.parse(localStorage.getItem("bookMyRouteBookings")||"[]");existing.push(booking);localStorage.setItem("bookMyRouteBookings",JSON.stringify(existing));
-emailjs.send("service_g3kqc7k","template_skx40tc",{to_email:email,name:name,bus_name:selectedBus.name,bus_number:selectedBus.busNumber,from:from,to:to,journey_date:journeyDate,seat:selectedSeat,bus_type:selectedBus.type,departure:selectedBus.departure,arrival:selectedBus.arrival,price:finalPrice})
-.then(()=>document.getElementById("message").innerText="✅ Booking confirmed! Confirmation email sent to "+email)
-.catch(()=>document.getElementById("message").innerText="✅ Booking confirmed! Email could not be sent.");
-renderSeats();
-}).catch(error=>{console.error(error);document.getElementById("message").innerText="❌ Booking failed. Please try again.";});
+const alreadyBooked=selectedSeats.filter(s=>bookings.some(x=>x.key===seatKey()&&x.seat===s));
+if(alreadyBooked.length){
+    document.getElementById("message").innerText="❌ Already booked seat(s): "+alreadyBooked.join(", ")+". Please choose another seat.";
+    renderSeats();
+    return;
+}
+
+const category=document.getElementById("category").value;
+const discount=category==="senior"?.40:category==="child"?.50:0;
+const finalPricePerSeat=Math.round(selectedBus.price*(1-discount));
+const totalFare=finalPricePerSeat*selectedSeats.length;
+const seatsToBook=[...selectedSeats];
+
+document.getElementById("message").innerText="⏳ Confirming "+seatsToBook.length+" seat(s)...";
+document.querySelector(".book-btn").disabled=true;
+
+async function saveSeat(seat){
+    const response=await fetch("/book",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+            name:name,
+            age:age,
+            gender:gender,
+            phone:phone,
+            email:email,
+            source:from,
+            destination:to,
+            journeyDate:journeyDate,
+            seat:seatToNumber(seat),
+            busNumber:selectedBus.busNumber
+        })
+    });
+    const data=await response.text();
+    if(!response.ok || !data.includes("Booking successful")){
+        throw new Error("Server booking failed for seat "+seat+": "+data);
+    }
+    return data;
+}
+
+(async function(){
+    try{
+        for(const seat of seatsToBook){
+            await saveSeat(seat);
+        }
+
+        const newBookings=seatsToBook.map(seat=>({
+            key:seatKey(),
+            seat:seat,
+            gender:gender,
+            name:name,
+            from:from,
+            to:to,
+            journeyDate:journeyDate,
+            busName:selectedBus.name,
+            busNumber:selectedBus.busNumber,
+            busType:selectedBus.type,
+            departure:selectedBus.departure,
+            arrival:selectedBus.arrival,
+            price:finalPricePerSeat,
+            totalFare:totalFare,
+            phone:phone,
+            email:email
+        }));
+
+        const latest=getBookings();
+        newBookings.forEach(booking=>{
+            if(!latest.some(x=>x.key===booking.key&&x.seat===booking.seat)){
+                latest.push(booking);
+            }
+        });
+        localStorage.setItem("bookMyRouteSeatBookings",JSON.stringify(latest));
+
+        const existing=JSON.parse(localStorage.getItem("bookMyRouteBookings")||"[]");
+        existing.push({
+            ...newBookings[0],
+            seats:seatsToBook,
+            seatCount:seatsToBook.length,
+            price:totalFare,
+            totalFare:totalFare
+        });
+        localStorage.setItem("bookMyRouteBookings",JSON.stringify(existing));
+
+        emailjs.send("service_g3kqc7k","template_skx40tc",{
+            to_email:email,
+            name:name,
+            bus_name:selectedBus.name,
+            bus_number:selectedBus.busNumber,
+            from:from,
+            to:to,
+            journey_date:journeyDate,
+            seat:seatsToBook.join(", "),
+            bus_type:selectedBus.type,
+            departure:selectedBus.departure,
+            arrival:selectedBus.arrival,
+            price:totalFare
+        })
+        .then(()=>{
+            document.getElementById("message").innerText=
+                "✅ Booking confirmed! "+seatsToBook.length+" seat(s) • Total ₹"+totalFare+" • Confirmation email sent to "+email;
+        })
+        .catch(()=>{
+            document.getElementById("message").innerText=
+                "✅ Booking confirmed! "+seatsToBook.length+" seat(s) • Total ₹"+totalFare+" • Email could not be sent.";
+        });
+
+        selectedSeats=[];
+        document.getElementById("selectedSeat").innerText="None";
+        renderSeats();
+        updateFare();
+    }catch(error){
+        console.error(error);
+        document.getElementById("message").innerText=
+            "❌ Booking failed. No confirmation was completed. Please try again.";
+    }finally{
+        document.querySelector(".book-btn").disabled=false;
+    }
+})();
 }
 
 const today=new Date(),yyyy=today.getFullYear(),mm=String(today.getMonth()+1).padStart(2,"0"),dd=String(today.getDate()).padStart(2,"0");
 document.getElementById("journeyDate").min=`${yyyy}-${mm}-${dd}`;
-document.getElementById("journeyDate").addEventListener("change",()=>{selectedSeat="";renderSeats()});
+document.getElementById("journeyDate").addEventListener("change",()=>{selectedSeats=[];document.getElementById("selectedSeat").innerText="None";updateFare();renderSeats()});
 const params=new URLSearchParams(window.location.search),urlFrom=params.get("from"),urlTo=params.get("to"),urlDate=params.get("date");
 if(urlFrom)document.getElementById("from").value=urlFrom;if(urlTo)document.getElementById("to").value=urlTo;if(urlDate)document.getElementById("journeyDate").value=urlDate;
 if(urlFrom&&urlTo)filterBuses();else renderSeats();
