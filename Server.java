@@ -92,7 +92,9 @@ public class Server {
                 if (parts.length > 1) {
                     path = parts[1];
                 }
-
+if (path.contains("?")) {
+    path = path.substring(0, path.indexOf("?"));
+}
                 if (path.equals("/")) {
                     path = "/index.html";
                 }
