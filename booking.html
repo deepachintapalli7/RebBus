@@ -227,9 +227,24 @@ const adjacentBooking=bookings.find(x=>x.seat===adjacentSeat(id));
 if(adjacentBooking&&adjacentBooking.gender==="Female"){
 button.classList.add("female-only");
 button.innerHTML=id+"<small>Female only</small>";
-if(gender!=="Female"){button.classList.add("locked");button.disabled=true}
+
+// Female passengers CAN select a Female-only adjacent seat.
+// Male/Other passengers cannot select it.
+if(gender === "Female"){
+    button.disabled=false;
+    button.classList.remove("locked");
+    button.title="Available for female passenger";
+}else{
+    button.classList.add("locked");
+    button.disabled=true;
 }
-button.onclick=()=>selectSeat(button,id);
+}
+
+// Every available seat, including Female-only seats for female passengers,
+// remains clickable.
+if(!button.disabled){
+    button.onclick=()=>selectSeat(button,id);
+}
 }
 grid.appendChild(button);
 });
