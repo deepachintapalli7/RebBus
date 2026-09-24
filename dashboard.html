@@ -92,7 +92,8 @@
             border-radius: 25px;
             position: relative;
             overflow: hidden;
-            background: linear-gradient(180deg,#56ccf2,#2f80ed);
+            background:
+                linear-gradient(180deg,#56ccf2,#2f80ed);
             color: white;
             padding: 45px;
             box-shadow: 0 15px 30px rgba(0,0,0,0.15);
@@ -187,86 +188,36 @@
             position: absolute;
             bottom: 48px;
             left: -180px;
-            width: 110px;
-            height: 90px;
+            font-size: 85px;
             z-index: 10;
 
             animation: busDrive 9s linear infinite;
-
-            filter: drop-shadow(0 8px 5px rgba(0,0,0,0.25));
         }
 
-        /* Bus faces RIGHT */
+       @keyframes busDrive {
 
-        .bus-emoji {
-            display: block;
-            font-size: 85px;
+    0% {
+        left: 110%;
+        transform: scaleX(-1);
+    }
 
-            transform: scaleX(-1);
+    45% {
+        transform: scaleX(-1) rotate(-1deg);
+    }
 
-            animation: busBounce 0.45s ease-in-out infinite alternate;
-        }
+    50% {
+        transform: scaleX(-1) rotate(1deg);
+    }
 
-        /* Exhaust */
+    55% {
+        transform: scaleX(-1) rotate(-1deg);
+    }
 
-        .exhaust {
-            position: absolute;
-            left: -5px;
-            bottom: 18px;
-            font-size: 25px;
-            opacity: 0.8;
-
-            animation: exhaustMove 0.8s ease-out infinite;
-        }
-
-        /* LEFT → RIGHT */
-
-        @keyframes busDrive {
-
-            0% {
-                left: -180px;
-            }
-
-            100% {
-                left: 110%;
-            }
-        }
-
-        /* Bus bouncing */
-
-        @keyframes busBounce {
-
-            0% {
-                transform: scaleX(-1) translateY(0) rotate(-1deg);
-            }
-
-            50% {
-                transform: scaleX(-1) translateY(-3px) rotate(1deg);
-            }
-
-            100% {
-                transform: scaleX(-1) translateY(0) rotate(-1deg);
-            }
-        }
-
-        /* Exhaust moving backwards */
-
-        @keyframes exhaustMove {
-
-            0% {
-                transform: translateX(0) scale(0.6);
-                opacity: 0;
-            }
-
-            30% {
-                opacity: 0.8;
-            }
-
-            100% {
-                transform: translateX(-35px) scale(1.3);
-                opacity: 0;
-            }
-        }
+    100% {
+        left: -180px;
+        transform: scaleX(-1);
+    }
+}
 
         /* ================= SEARCH ================= */
 
@@ -298,6 +249,72 @@
 
         input:focus {
             border-color: #088395;
+        }
+
+        .autocomplete {
+            position: relative;
+        }
+
+        .city-suggestions {
+            position: absolute;
+            top: 72px;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,.12);
+            z-index: 30;
+            display: none;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .city-suggestions div {
+            padding: 12px 14px;
+            cursor: pointer;
+            color: #071952;
+        }
+
+        .city-suggestions div:hover {
+            background: #e8fbfd;
+        }
+
+        .search-help {
+            margin-top: 10px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .dashboard-extra {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 18px;
+            margin-top: 25px;
+        }
+
+        .extra-card {
+            background: white;
+            padding: 22px;
+            border-radius: 18px;
+            box-shadow: 0 5px 18px rgba(0,0,0,.07);
+        }
+
+        .extra-card h3 {
+            color: #071952;
+            margin-bottom: 10px;
+        }
+
+        .extra-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-top: 5px;
+        }
+
+        @media(max-width:1000px) {
+            .dashboard-extra {
+                grid-template-columns: 1fr;
+            }
         }
 
         .search-btn {
@@ -540,7 +557,7 @@
                 font-size: 28px;
             }
 
-            .bus-emoji {
+            .bus {
                 font-size: 60px;
             }
 
@@ -605,6 +622,8 @@
 
         <h1>Welcome to BookMyRoute 👋</h1>
 
+        <!-- TRAVELER NOW OPENS ACCOUNT -->
+
         <div
             class="profile"
             onclick="openProfile()"
@@ -631,18 +650,9 @@
         </p>
 
         <div class="bus">
-
-            <span class="bus-emoji">🚌</span>
-
-            <span class="exhaust">💨</span>
-
-        </div>
-
-        <div class="road">
-            <div class="road-lines"></div>
-        </div>
-
-    </div>
+    <span class="bus-emoji">🚌</span>
+    <span class="exhaust">💨</span>
+</div>
 
 
     <!-- ================= SEARCH ================= -->
@@ -653,17 +663,27 @@
 
         <div class="search-grid">
 
-            <input
-                type="text"
-                id="from"
-                placeholder="📍 From"
-            >
+            <div class="autocomplete">
+                <input
+                    type="text"
+                    id="from"
+                    placeholder="📍 From"
+                    autocomplete="off"
+                    oninput="showCitySuggestions('from')"
+                >
+                <div id="fromSuggestions" class="city-suggestions"></div>
+            </div>
 
-            <input
-                type="text"
-                id="to"
-                placeholder="📍 To"
-            >
+            <div class="autocomplete">
+                <input
+                    type="text"
+                    id="to"
+                    placeholder="📍 To"
+                    autocomplete="off"
+                    oninput="showCitySuggestions('to')"
+                >
+                <div id="toSuggestions" class="city-suggestions"></div>
+            </div>
 
             <input
                 type="date"
@@ -798,6 +818,7 @@
 
             <p>🚌 Orange Travels</p>
             <p>🪑 AC Sleeper</p>
+            <p>📍 Boarding/drop details available</p>
 
             <a href="booking.html" class="route-button">
                 Book →
@@ -831,6 +852,30 @@
                 Book →
             </a>
 
+        </div>
+
+
+    <h2 class="section-title">Travel Information 🚌</h2>
+
+    <div class="dashboard-extra">
+
+        <div class="extra-card">
+            <h3>🛡️ Safety First</h3>
+            <p>Driver information, bus features and safety details are shown before booking.</p>
+            <p>Seat availability is checked for the selected journey.</p>
+        </div>
+
+        <div class="extra-card">
+            <h3>🎁 Passenger Offers</h3>
+            <p>👴 Senior citizens: <strong>40% OFF</strong></p>
+            <p>👶 Children: <strong>50% OFF</strong></p>
+            <p>👤 General citizens: standard fare</p>
+        </div>
+
+        <div class="extra-card">
+            <h3>🔄 Alternative Routes</h3>
+            <p>If your selected route has no bus, BookMyRoute can show other listed buses or nearby route options.</p>
+            <p>Live tracking is currently a demo feature.</p>
         </div>
 
     </div>
@@ -973,6 +1018,87 @@ function openProfile() {
 }
 
 
+
+/* ==========================================
+   CITY AUTOCOMPLETE
+   ========================================== */
+
+const cityNames = [
+    ...new Set(
+        buses.flatMap(function(bus) {
+            return [bus.from, bus.to];
+        })
+    )
+];
+
+function cityLabel(city) {
+    return city.replace(/\b\w/g, function(letter) {
+        return letter.toUpperCase();
+    });
+}
+
+function showCitySuggestions(field) {
+
+    const input = document.getElementById(field);
+    const box = document.getElementById(field + "Suggestions");
+
+    const query =
+        input.value.trim().toLowerCase();
+
+    if (!query) {
+        box.style.display = "none";
+        return;
+    }
+
+    const matches =
+        cityNames.filter(function(city) {
+            return city.includes(query);
+        });
+
+    box.innerHTML = "";
+
+    matches.forEach(function(city) {
+
+        const item =
+            document.createElement("div");
+
+        item.innerText = cityLabel(city);
+
+        item.onclick = function() {
+
+            input.value = city;
+
+            box.style.display = "none";
+
+            if (field === "from") {
+                document.getElementById("to").focus();
+            }
+
+        };
+
+        box.appendChild(item);
+
+    });
+
+    box.style.display =
+        matches.length ? "block" : "none";
+}
+
+document.addEventListener("click", function(event) {
+
+    if (!event.target.closest(".autocomplete")) {
+
+        document
+            .querySelectorAll(".city-suggestions")
+            .forEach(function(box) {
+                box.style.display = "none";
+            });
+
+    }
+
+});
+
+
 /* ==========================================
    SEARCH BUSES
    ========================================== */
@@ -998,9 +1124,13 @@ function searchBus() {
         document.getElementById("resultsContainer");
 
 
+    /* Clear old results */
+
     container.innerHTML = "";
     results.style.display = "none";
 
+
+    /* Check empty fields */
 
     if (!fromInput || !toInput || !date) {
 
@@ -1013,12 +1143,18 @@ function searchBus() {
     }
 
 
+    /* Convert to lowercase for case-insensitive checking */
+
     const from =
         fromInput.toLowerCase();
 
     const to =
         toInput.toLowerCase();
 
+
+    /* ==========================================
+       EXACT CITY SPELLING CHECK
+       ========================================== */
 
     if (!validCities.includes(from)) {
 
@@ -1042,6 +1178,8 @@ function searchBus() {
     }
 
 
+    /* Same city check */
+
     if (from === to) {
 
         showMessage(
@@ -1052,6 +1190,10 @@ function searchBus() {
         return;
     }
 
+
+    /* ==========================================
+       FIND MATCHING BUSES
+       ========================================== */
 
     const matchingBuses =
         buses.filter(function(bus) {
@@ -1077,6 +1219,10 @@ function searchBus() {
     }
 
 
+    /* ==========================================
+       SHOW SUCCESS MESSAGE
+       ========================================== */
+
     showMessage(
         "✅ " +
         matchingBuses.length +
@@ -1088,6 +1234,10 @@ function searchBus() {
         "success"
     );
 
+
+    /* ==========================================
+       CREATE BUS CARDS
+       ========================================== */
 
     matchingBuses.forEach(function(bus) {
 
@@ -1108,6 +1258,7 @@ function searchBus() {
                 </div>
             </div>
 
+
             <div>
                 <div class="time">
                     🕐 ${bus.departure}
@@ -1117,6 +1268,7 @@ function searchBus() {
                     Departure
                 </div>
             </div>
+
 
             <div>
                 <div class="time">
@@ -1128,6 +1280,7 @@ function searchBus() {
                 </div>
             </div>
 
+
             <div>
                 <div class="price">
                     ₹${bus.price}
@@ -1137,6 +1290,7 @@ function searchBus() {
                     🪑 ${bus.seats} seats available
                 </div>
             </div>
+
 
             <div>
                 <button
@@ -1156,6 +1310,8 @@ function searchBus() {
 
     results.style.display = "block";
 
+
+    /* Scroll to results */
 
     setTimeout(function() {
 
