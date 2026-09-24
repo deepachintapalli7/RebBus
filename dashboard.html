@@ -183,41 +183,48 @@
         }
 
         /* ================= CREATIVE BUS ================= */
-
         .bus {
             position: absolute;
-            bottom: 48px;
-            left: -180px;
-            font-size: 85px;
+            left: -150px;
+            bottom: 28px;
+            width: 110px;
+            height: 90px;
             z-index: 10;
-
             animation: busDrive 9s linear infinite;
         }
 
-       @keyframes busDrive {
+        .bus-emoji {
+            display: block;
+            font-size: 78px;
+            line-height: 1;
+            transform: scaleX(-1);
+            animation: busBounce 0.45s ease-in-out infinite alternate;
+        }
 
-    0% {
-        left: 110%;
-        transform: scaleX(-1);
-    }
+        .exhaust {
+            position: absolute;
+            left: -5px;
+            bottom: 15px;
+            font-size: 22px;
+            opacity: 0.8;
+            animation: exhaustMove 0.8s ease-out infinite;
+        }
 
-    45% {
-        transform: scaleX(-1) rotate(-1deg);
-    }
+        @keyframes busDrive {
+            0% { left: -150px; }
+            100% { left: calc(100% + 150px); }
+        }
 
-    50% {
-        transform: scaleX(-1) rotate(1deg);
-    }
+        @keyframes busBounce {
+            from { transform: scaleX(-1) translateY(0) rotate(-1deg); }
+            to { transform: scaleX(-1) translateY(-3px) rotate(1deg); }
+        }
 
-    55% {
-        transform: scaleX(-1) rotate(-1deg);
-    }
-
-    100% {
-        left: -180px;
-        transform: scaleX(-1);
-    }
-}
+        @keyframes exhaustMove {
+            0% { transform: translateX(0) scale(0.6); opacity: 0; }
+            30% { opacity: 0.8; }
+            100% { transform: translateX(-35px) scale(1.2); opacity: 0; }
+        }
 
         /* ================= SEARCH ================= */
 
@@ -257,7 +264,7 @@
 
         .city-suggestions {
             position: absolute;
-            top: 72px;
+            top: 52px;
             left: 0;
             right: 0;
             background: white;
@@ -557,8 +564,12 @@
                 font-size: 28px;
             }
 
-            .bus {
+            .bus-emoji {
                 font-size: 60px;
+            }
+
+            .bus {
+                bottom: 30px;
             }
 
             .bus-card {
@@ -650,10 +661,15 @@
         </p>
 
         <div class="bus">
-    <span class="bus-emoji">🚌</span>
-    <span class="exhaust">💨</span>
-</div>
+            <span class="bus-emoji">🚌</span>
+            <span class="exhaust">💨</span>
+        </div>
 
+        <div class="road">
+            <div class="road-lines"></div>
+        </div>
+
+    </div>
 
     <!-- ================= SEARCH ================= -->
 
